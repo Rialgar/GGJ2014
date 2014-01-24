@@ -22,19 +22,21 @@ define(function () {
 
 					// find the tileset
 					var tileset = map.getElementsByTagName("tileset")[0];
-					var tileSize = new Vector2D(tileset.getAttribute("tilewidth"), tileset.getAttribute("tileheight"));
+					var tileWidth = tileset.getAttribute("tilewidth");
+					var tileheight = tileset.getAttribute("tileheight");
 					var imageNode = tileset.childNodes[1];
-					var imageSize = new Vector2D(imageNode.getAttribute("width"), image.getAttribute("height"));
+					var imageWidth = imageNode.getAttribute("width");
+					var imageHeight = imageNode.getAttribute("height");
 					var imgPath = imageNode.getAttribute("source");
 					imgPath = imgPath.substr(1);
 
 					var image = new Image();
-					image.src = imagePaths;
+					image.src = imgPath;
 					image.onload = function() {	
 						//TODO: do we need to do something here?
-					});
+					};
 
-					out.tiles = [];
+					that.tiles = [];
 
 					// process the map data
 					var layers = map.getElementsByTagName("layer");
@@ -45,10 +47,10 @@ define(function () {
 						var data = layer.childNodes[1];
 						var tilesArray = data.textContent.split(",");
 						for (var x = 0; x < layerWidth; x++) {
-							out.tiles[x] = [];
+							that.tiles[x] = [];
 							for (var y = 0; y < layerHeight; y++) {
-								var tile = parseInt(tilesArray[layerSize.x * y + x]);
-								out.tiles[x][y] = tile;
+								var tile = parseInt(tilesArray[layerWidth * y + x]);
+								that.tiles[x][y] = tile;
 							}
 						}
 					}
@@ -63,7 +65,10 @@ define(function () {
 						//TODO: do something with objects.
 					}
 
-					cb(out);
+					if(typeof cb === "function")
+					{
+						cb();
+					}
 				}
 			}
 

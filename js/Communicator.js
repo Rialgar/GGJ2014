@@ -1,15 +1,19 @@
-define(function() {"use strict";
+define(["Emitter"], function(Emitter) {"use strict";
 	var Communicator = function Communicator() {
+		Emitter.call(this);
 		this.socket;
 	};
+	
+	Communicator.prototype = Object.create(Emitter.prototype);
+	Communicator.prototype.constructor = Communicator;
 	
 	Communicator.prototype.connect = function() {
 		var socket = io.connect('http://'+window.location.host);
 		var that = this;
 		
 		socket.on("data", function(data) {
-			console.log(data);
-			//TODO: do something depending on the type of data which is received
+			//console.log(data);
+			that.emit(data.type, data.val);
 		});
 		
 		this.socket = socket;

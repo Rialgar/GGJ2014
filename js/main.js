@@ -5,7 +5,6 @@ require(['domReady', "Communicator", "Player"], function (domReady, Communicator
 
   	game.canvas = document.getElementById("canvas");
 
-	var player = new Player();
 	var lastTime = null;
 	var animate = function(timeStamp) {
 		window.requestAnimationFrame(animate);
@@ -16,7 +15,7 @@ require(['domReady', "Communicator", "Player"], function (domReady, Communicator
 			console.log("frame skipped because of too large delta");
 			return;
 		}
-		player.update(delta);
+		Player.instance.update(delta);
 	}
 	animate();
 

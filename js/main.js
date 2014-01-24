@@ -1,5 +1,10 @@
 require(['domReady'], function (domReady) {
   domReady(function () {
-  	console.log("loaded");
+
+  	var game = {};
+
+  	game.canvas = document.getElementById("canvas");
+
+  	window.game = game;
   });
 });

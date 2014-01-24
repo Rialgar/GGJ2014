@@ -2,11 +2,9 @@ define(function() {"use strict";
 	var Communicator = function Communicator() {
 		this.socket;
 	};
-	Communicator.prototype = Object.create(Emitter.prototype);
-	Communicator.prototype.constructor = Communicator;
 
 	Communicator.prototype.connect = function() {
-		var socket = IO.connect('http://'+window.location.host);
+		var socket = io.connect('http://'+window.location.host);
 		var that = this;
 		
 		socket.on("debug", function(data) {

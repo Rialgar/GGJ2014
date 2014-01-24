@@ -1,4 +1,4 @@
-require(['domReady', "Communicator"], function (domReady, Communicator) {
+require(['domReady', "Communicator", "Player"], function (domReady, Communicator, Player) {
   domReady(function () {
 
   	var game = {};
@@ -12,6 +12,14 @@ require(['domReady', "Communicator"], function (domReady, Communicator) {
 	window.setInterval(function() {
 		comm.send("test");
 	}, 1000);
+
+
+	var player = new Player();
+	var animate = function() {
+		window.requestAnimationFrame(animate);
+		player.update();
+	}
+	animate();
 
   	window.game = game;
   });

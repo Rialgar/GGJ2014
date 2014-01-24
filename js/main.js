@@ -15,9 +15,17 @@ require(['domReady', "Communicator", "Player"], function (domReady, Communicator
 
 
 	var player = new Player();
-	var animate = function() {
+	var lastTime = null;
+	var animate = function(timeStamp) {
 		window.requestAnimationFrame(animate);
-		player.update();
+		var delta = timeStamp - lastTime;
+		lastTime = timeStamp;
+		
+		if(delta > 100) {
+			console.log("frame skipped because of too large delta");
+			return;
+		}
+		player.update(delta);
 	}
 	animate();
 

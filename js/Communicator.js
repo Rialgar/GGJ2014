@@ -8,7 +8,7 @@ define(function() {"use strict";
 		var that = this;
 		
 		socket.on("data", function(data) {
-			//console.log(data);
+			console.log(data);
 			//TODO: do something depending on the type of data which is received
 		});
 		

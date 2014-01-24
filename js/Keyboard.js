@@ -1,4 +1,4 @@
-define(["Vector2D"], function(Vector2D) {"use strict";
+define(["Vector2D", "Communicator"], function(Vector2D, Communicator) {"use strict";
 	var Keyboard = function(target) {
 		var that = this;
 		this.keys = [];
@@ -8,12 +8,16 @@ define(["Vector2D"], function(Vector2D) {"use strict";
 		this.movingVector = new Vector2D();
 
 		target.addEventListener("keydown", function(evt) {
-			that.keys[evt.keyCode] = true;
-			that.update();
+			if(that.keys[evt.keyCode] !== true) {
+				that.keys[evt.keyCode] = true;
+				that.update();
+			}
 		}, false);
 		target.addEventListener("keyup", function(evt) {
-			that.keys[evt.keyCode] = false;
-			that.update();
+			if(that.keys[evt.keyCode] !== false) {
+				that.keys[evt.keyCode] = false;
+				that.update();
+			}
 		}, false);
 	};
 	Keyboard.prototype = {
@@ -22,6 +26,7 @@ define(["Vector2D"], function(Vector2D) {"use strict";
 			this.movingVector.x = this.keys[Keyboard.KEY_D] + this.keys[Keyboard.KEY_RIGHT] - this.keys[Keyboard.KEY_A] - this.keys[Keyboard.KEY_LEFT];
 			this.movingVector.y = this.keys[Keyboard.KEY_W] + this.keys[Keyboard.KEY_UP] - this.keys[Keyboard.KEY_S] - this.keys[Keyboard.KEY_DOWN];
 			this.movingVector.normalize();
+			Communicator.instance.send(this.movingVector);
 		}
 	};
 	Keyboard.KEY_W = 87;

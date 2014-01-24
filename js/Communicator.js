@@ -7,7 +7,7 @@ define(function() {"use strict";
 		var socket = io.connect('http://'+window.location.host);
 		var that = this;
 		
-		socket.on("debug", function(data) {
+		socket.on("data", function(data) {
 			console.log(data);
 		});
 		

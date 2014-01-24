@@ -11,6 +11,10 @@ require(["domReady", "Communicator", "Level"], function (domReady, Communicator,
 	var comm = new Communicator();
 	comm.connect();
 	comm.send("huhu");
+	
+	window.setInterval(function() {
+		comm.send("test");
+	}, 1000);
 
   	window.game = game;
   });

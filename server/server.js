@@ -8,6 +8,8 @@ app.listen(80);
 
 var path = "..";
 
+var sockets = [];
+
 function handler (request, response) {
   var req = url.parse(request.url);
   var uri = req.pathname;
@@ -29,8 +31,15 @@ function handler (request, response) {
 }
 
 io.sockets.on('connection', function (socket) {
+  sockets.push(socket);
+  
   socket.emit('debug', "hello world");
+  
   socket.on("data", function (data) {
-    console.log(data);
+    for(var i = 0; i< sockets.length; i++) {
+    	if(sockets[i] && sockets[i] !== socket) {
+    		sockets[i].emit("data", data);
+    	}
+    }
   });
 });

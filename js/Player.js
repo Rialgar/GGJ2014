@@ -2,7 +2,7 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 	var Player = function Player() {
 		this.position = new Vector2D(8, 5);
 
-		this.LP = 4;
+		this.LP = 2;
 		this.invincible = false;
 
 		this.keyboard = new Keyboard(document);
@@ -77,12 +77,12 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 	Player.prototype.damage = function() {
 		if (!this.invincible) {
 			this.LP--;
+			this.refreshLifeDisplay();
+			this.invincible = true;
 			if (this.LP < 0) {
 				this.die();
 				return;
 			}
-			this.refreshLifeDisplay();
-			this.invincible = true;
 			var that = this;
 			window.setTimeout(function() {
 				that.invincible = false;
@@ -112,10 +112,6 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		}
 		this.sprite.setPosition(this.position);
 	};
-
-	Player.prototype.draw = function(ctx) {
-		//TODO: implement
-	}
 
 	Player.prototype.applyExternalMovement = function(moveDelta) {
 		this.externalMovingVector.set(moveDelta.x, moveDelta.y);

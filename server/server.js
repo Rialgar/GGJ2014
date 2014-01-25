@@ -67,6 +67,7 @@ function handler (request, response) {
 
 io.sockets.on('connection', function (socket) {
   sockets.push(socket);
+  socket.emit("init", sockets.length % 2);
   socket.on("data", function (data) {
     for(var i = 0; i< sockets.length; i++) {
     	if(sockets[i] && sockets[i] !== socket) {

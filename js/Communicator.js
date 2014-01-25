@@ -12,8 +12,11 @@ define(["Emitter"], function(Emitter) {"use strict";
 		var that = this;
 		
 		socket.on("data", function(data) {
-			//console.log(data);
 			that.emit(data.type, data.val);
+		});
+		
+		socket.on("init", function(data) {
+			console.log("You are player",data);
 		});
 		
 		this.socket = socket;

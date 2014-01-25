@@ -7,6 +7,12 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
 
   	game.level = new Level("./maps/placeholder.tmx")
   	game.level.load();
+  	
+  	var stats = new Stats();
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.top = '0px';
+	document.body.appendChild(stats.domElement);
+
 
   	game.draw = function(){
   		var ctx = this.canvas.getContext("2d");
@@ -17,17 +23,21 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
 	var lastTime = null;
 	var animate = function(timeStamp) {
 		window.requestAnimationFrame(animate);
-		var delta = timeStamp - lastTime;
-		lastTime = timeStamp;
-		
-		if(delta > 100) {
-			console.log("frame skipped because of too large delta");
-			return;
-		}
-		Player.instance.update(delta);
+		stats.update();
+
 		game.draw();
 	}
 	animate();
+	
+	var d = new Date().valueOf();
+	var delta = 1;
+	var now = 0;
+	window.setInterval(function() {
+		now = new Date().valueOf();
+		delta = now - d;
+		d = now;
+		Player.instance.update(delta);
+	},10);
 
 	//DEBUG;
   	window.game = game;

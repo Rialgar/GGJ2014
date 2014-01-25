@@ -1,49 +1,42 @@
-define(["Vector2D", "Communicator"], function(Vector2D, Communicator) {"use strict";
+define(["Vector2D", "Communicator", "Emitter"], function(Vector2D, Communicator, Emitter) {"use strict";
 	var Gamepad = function(id) {
+		Emitter.call(this);
 		this.id = id;
 		this.lastState = null;
 		this.currentState = null;
-		this.ownMovingVector = new Vector2D();
 		this.movingVector = new Vector2D();
-		this.externalMovingVector = new Vector2D();
 
 		this.actionRequest = [];
-		window.addEventListener("MozGamepadAxisMove", function(event, pressed) {
-			console.log(event);
-		}, false);
+
 		this.update();
 	};
-	Gamepad.prototype = {
-		constructor : Gamepad,
-		update : function() {
-			this.lastState = this.currentState && this.currentState.buttons;
-			if (navigator.webkitGetGamepads) {
-				this.currentState = navigator.webkitGetGamepads()[this.id];
-			} else {
 
+	Gamepad.prototype = Object.create(Emitter.prototype);
+	Gamepad.prototype.constructor = Gamepad;
+
+	Gamepad.prototype.update = function() {
+		this.lastState = this.currentState && this.currentState.buttons;
+		if (navigator.webkitGetGamepads) {
+			this.currentState = navigator.webkitGetGamepads()[this.id];
+		}
+
+		if (this.currentState) {
+			this.lastVector = this.movingVector.copy();
+			this.movingVector.x = this.currentState.buttons[Gamepad.BUTTON_RIGHT] - this.currentState.buttons[Gamepad.BUTTON_LEFT];
+			this.movingVector.y = -(this.currentState.buttons[Gamepad.BUTTON_UP] - this.currentState.buttons[Gamepad.BUTTON_DOWN]);
+			if (!this.movingVector.length()) {
+				this.movingVector.x = Math.abs(this.currentState.axes[0]) > Gamepad.STICK_THRESHOLD ? this.currentState.axes[0] : 0;
+				this.movingVector.y = -(Math.abs(this.currentState.axes[1]) > Gamepad.STICK_THRESHOLD ? -this.currentState.axes[1] : 0);
 			}
 
-			if (this.currentState) {
-				this.lastVector = this.ownMovingVector.copy();
-				this.ownMovingVector.x = this.currentState.buttons[Gamepad.BUTTON_RIGHT] - this.currentState.buttons[Gamepad.BUTTON_LEFT];
-				this.ownMovingVector.y = -(this.currentState.buttons[Gamepad.BUTTON_UP] - this.currentState.buttons[Gamepad.BUTTON_DOWN]);
-				if (!this.ownMovingVector.length()) {
-					this.ownMovingVector.x = Math.abs(this.currentState.axes[0]) > Gamepad.STICK_THRESHOLD ? this.currentState.axes[0] : 0;
-					this.ownMovingVector.y = -(Math.abs(this.currentState.axes[1]) > Gamepad.STICK_THRESHOLD ? -this.currentState.axes[1] : 0);
-				}
-				
-				this.movingVector.x = this.ownMovingVector.x + this.externalMovingVector.x;
-				this.movingVector.y = this.ownMovingVector.y + this.externalMovingVector.y;
+			if (this.lastVector.sub(this.movingVector).length() !== 0) {
+				this.emit("moveChange", this.movingVector);
+			}
 
-				if(this.lastVector.sub(this.ownMovingVector).length() !== 0) {
-					Communicator.instance.send({type: "moveChange", val: this.ownMovingVector});
-				}
-				
-				if (this.lastState) {
-					for (var i = 0; i < this.lastState.length; i++) {
-						if (this.currentState.buttons[i] && !this.lastState[i]) {
-							this.actionRequest[i] = true;
-						}
+			if (this.lastState) {
+				for (var i = 0; i < this.lastState.length; i++) {
+					if (this.currentState.buttons[i] && !this.lastState[i]) {
+						this.actionRequest[i] = true;
 					}
 				}
 			}

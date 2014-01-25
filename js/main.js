@@ -37,6 +37,7 @@ require(['domReady', "Communicator", "Level", "Player"], function(domReady, Comm
 				if(critter) {
 					if(critter.getPosition().x === rx && critter.getPosition().y === ry) {
 						//TODO: damage the player or something
+						Player.instance.damage();
 						return true;
 					}
 				}
@@ -89,6 +90,7 @@ require(['domReady', "Communicator", "Level", "Player"], function(domReady, Comm
 		var animate = function(timeStamp) {
 			window.requestAnimationFrame(animate);
 			stats.update();
+			TWEEN.update();
 
 			game.draw();
 		}

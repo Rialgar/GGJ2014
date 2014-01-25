@@ -5,6 +5,7 @@
 	<script type="application/javascript" src="/socket.io/socket.io.js"></script>
 	<script type="application/javascript" src="js/Stats.js"></script>
 	<script type="application/javascript" src="js/three.min.js"></script>
+	<script type="application/javascript" src="js/tween.min.js"></script>
 	<script data-main="js/main" src="js/require.js"></script>
 	<style>
 		* {
@@ -14,8 +15,16 @@
 		#canvas {
 			width: 100%;
 		}
+		#lifeDisplay {
+			position: absolute;
+			top:0px;
+			right: 0px;
+		}
 		body {
 			background-color: black;
+		}
+		img {
+			width: 50px;
 		}
 	</style>
 </head>
@@ -23,4 +32,6 @@
 <body>
 	<canvas id="canvas" width="1920" height="1080" style="background-color:black">
 	</canvas>
+	<div id="lifeDisplay">
+	</div>
 </body>

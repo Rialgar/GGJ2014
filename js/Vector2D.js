@@ -38,6 +38,11 @@ define(function() {"use strict";
 			this.y += vector.y;
 			return this;
 		},
+		sub : function(vector) {
+			this.x -= vector.x;
+			this.y -= vector.y;
+			return this;
+		},
 		angle : function() {
 			return Math.atan2(this.y, this.x);
 		}

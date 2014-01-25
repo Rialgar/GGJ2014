@@ -15,18 +15,25 @@ define(["Keyboard", "Vector2D", "Communicator", "Gamepad"], function(Keyboard, V
 		
 		var that = this;
 		Communicator.instance.register(this, "moveChange", function(data) {
-			that.applyExternalMovement(data);
+			this.position.set(data.pos.x, data.pos.y);
+			that.applyExternalMovement(data.vec);
 		});
 	};
 	
 	Player.prototype.registerEventHandlers = function() {
 		this.keyboard.register(this, "moveChange", function(data) {
 			this.movingVector = data;
-			Communicator.instance.send({type: "moveChange", val: data});
+			Communicator.instance.send({type: "moveChange", val: {
+				vec: data,
+				pos: this.position 
+			}});
 		});
 		this.gamepad.register(this, "moveChange", function(data) {
 			this.movingVector = data;
-			Communicator.instance.send({type: "moveChange", val: data});
+			Communicator.instance.send({type: "moveChange", val: {
+				vec: data,
+				pos: this.position 
+			}});
 		});
 	};
 	

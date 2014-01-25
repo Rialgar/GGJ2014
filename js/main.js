@@ -29,6 +29,8 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
 	}
 	animate();
 
+	//DEBUG;
   	window.game = game;
+  	window.player = Player.instance;
   });
 });

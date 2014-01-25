@@ -7,7 +7,6 @@ define(function () {
 		constructor : Level,
 
 		draw: function(ctx, size, offset) {
-			var c = 0;
 			for (var x = 0; x < this.width; x++) {
 	  			for (var y = 0; y < this.height; y++) {
 	  				var tileset = this.tileset;
@@ -17,7 +16,6 @@ define(function () {
 	  				if( rx > -tileset.tileWidth && rx < size.x + tileset.tileWidth &&
 	  					ry > -tileset.tileHeight && ry < size.y + tileset.tileHeight
 	  				){
-	  					c++;
 		  				var tile = this.tiles[x][y];
 		  				var tX = (tile-1) % tileset.width;
 		  				var tY = (tile-tX-1) / tileset.height;
@@ -30,7 +28,6 @@ define(function () {
 		  			}
 	  			};
 	  		};
-	  		console.log(c);
 		},
 
 		load : function(cb) {

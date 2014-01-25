@@ -45,7 +45,11 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 				var critter = game.critters[i];
 				if (critter) {
 					if (critter.getPosition().x === rx && critter.getPosition().y === ry) {
-						Player.instance.damage();
+						if(game.pID === 0) {
+							Player.instance.damage(1);
+							Communicator.instance.send({type: "damage", val: 1});
+						}
+						
 						return true;
 					}
 				}
@@ -135,7 +139,6 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 					critters[i].register(this, "land", function(data) {
 						if (game.critterCollide(Player.instance.position)) {
 							//wegpush
-							//TODO - check if you actually can go there
 							if(game.level.collides(Player.instance.position.copy().add(data.vec))) {
 								data.vec.scale(-1);
 							}

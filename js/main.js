@@ -133,17 +133,21 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 
 				game.camera = new THREE.OrthographicCamera(-w / 2 / game.level.tileWidth, w / 2 / game.level.tileWidth, h / 2 / game.level.tileHeight, -h / 2 / game.level.tileHeight, -500, 1000);
 				game.scene.add(game.level.mesh);
-				animate();
-				window.setInterval(function() {
-					now = new Date().valueOf();
-					delta = now - d;
-					d = now;
-					Player.instance.update(delta);
-					for (var i = 0; i < game.critters.length; i++) {
-						game.critters[i].update(delta);
-					};
-				}, 10);
+				
+				Communicator.instance.sendReady();
 			});
+		};
+		game.startGame = function(){
+			animate();
+			window.setInterval(function() {
+				now = new Date().valueOf();
+				delta = now - d;
+				d = now;
+				Player.instance.update(delta);
+				for (var i = 0; i < game.critters.length; i++) {
+					game.critters[i].update(delta);
+				};
+			}, 10);
 		};
 		Communicator.instance.game = game;
 

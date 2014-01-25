@@ -66,14 +66,25 @@ function handler (request, response) {
 var sockets = [];
 var waitingSocket = null;
 io.sockets.on('connection', function (socket) {
+	socket.gameReady = false;
   sockets.push(socket);
   if(!waitingSocket) {
   	waitingSocket = socket;
   } else {
+  	socket.partner = waitingSocket;
+  	waitingSocket.partner = socket;
   	waitingSocket.emit("init", 0);
   	socket.emit("init", 1);
   	waitingSocket = null;
   }
+  socket.on("ready", function(data) {
+  	socket.gameReady = true;
+  	if(socket.partner.gameReady) {
+  		socket.emit("go");
+  		socket.partner.emit("go");
+  	}
+  });
+  
   socket.on("data", function (data) {
     for(var i = 0; i< sockets.length; i++) {
     	if(sockets[i] && sockets[i] !== socket) {

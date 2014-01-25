@@ -36,9 +36,16 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
 		game.renderer.setSize(window.innerWidth, window.innerHeight);
 	}
 
-  	game.level = new Level("./maps/placeholder.tmx")
+  	game.level = new Level("./maps/test01.tmx")
   	game.level.load(function(){
   		console.log("done");
+  		game.camera = new THREE.OrthographicCamera(
+  		-960 / game.level.tileWidth,
+  		 960 / game.level.tileWidth,
+  		 540 / game.level.tileHeight,
+  		-540 / game.level.tileHeight,
+  		-500, 1000
+  	);
   		game.scene.add(game.level.mesh);
   	});
   	

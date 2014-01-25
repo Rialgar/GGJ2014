@@ -12,8 +12,8 @@ define(function () {
 	  			for (var y = 0; y < this.height; y++) {
 	  				var tileset = this.tileset;
 
-	  				var rx = (x + offset.x) * tileset.tileWidth;
-	  				var ry = (y + offset.y) * tileset.tileHeight;
+	  				var rx = Math.round((x - offset.x) * tileset.tileWidth);
+	  				var ry = Math.round((y - offset.y) * tileset.tileHeight);
 	  				if( rx > -tileset.tileWidth && rx < size.x + tileset.tileWidth &&
 	  					ry > -tileset.tileHeight && ry < size.y + tileset.tileHeight
 	  				){

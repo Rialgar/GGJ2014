@@ -11,7 +11,7 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
   	game.draw = function(){
   		var ctx = this.canvas.getContext("2d");
   		ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  		this.level.draw(ctx, {x:this.canvas.width, y:this.canvas.height}, {x:0, y:0});
+  		this.level.draw(ctx, {x:this.canvas.width, y:this.canvas.height}, Player.instance.position);
   	}
 
 	var lastTime = null;
@@ -25,6 +25,7 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
 			return;
 		}
 		Player.instance.update(delta);
+		game.draw();
 	}
 	animate();
 

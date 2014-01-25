@@ -93,6 +93,7 @@ require(['domReady', "Communicator", "Level", "Player"], function(domReady, Comm
 		var animate = function(timeStamp) {
 			window.requestAnimationFrame(animate);
 			stats.update();
+			TWEEN.update();
 
 			game.draw();
 		}

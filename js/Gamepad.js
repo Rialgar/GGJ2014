@@ -37,6 +37,9 @@ define(["Vector2D", "Communicator", "Emitter"], function(Vector2D, Communicator,
 				for (var i = 0; i < this.lastState.length; i++) {
 					if (this.currentState.buttons[i] && !this.lastState[i]) {
 						this.actionRequest[i] = true;
+						if(i === Gamepad.BUTTON_A) {
+							this.emit("attack");
+						}
 					}
 				}
 			}

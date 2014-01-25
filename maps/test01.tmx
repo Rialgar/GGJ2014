@@ -121,5 +121,6 @@
  </objectgroup>
  <objectgroup name="P1" width="30" height="100">
   <object gid="145" x="719" y="646"/>
+  <object gid="145" x="1117" y="960"/>
  </objectgroup>
 </map>

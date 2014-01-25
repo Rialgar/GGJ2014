@@ -32,6 +32,9 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 			that.applyExternalMovement(data.vec);
 			this.sprite.setPosition(this.position);
 		});
+		Communicator.instance.register(this, "attack", function(dir) {
+			this.doAttack(dir);
+		})
 	};
 
 	Player.prototype.refreshLifeDisplay = function() {
@@ -57,6 +60,9 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 				}
 			});
 		});
+		this.keyboard.register(this, "attack", function() {
+			this.attack();
+		});
 		this.gamepad.register(this, "moveChange", function(data) {
 			this.movingVector = data;
 			Communicator.instance.send({
@@ -67,7 +73,38 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 				}
 			});
 		});
+		this.gamepad.register(this, "attack", function() {
+			this.attack();
+		});
 	};
+
+	Player.prototype.doAttack = function(dir) {
+		this.sprite.setAnimation(dir);
+	}
+
+	Player.prototype.attack = function() {
+		var moving = this.movingVector.copy().add(this.externalMovingVector);
+		if(moving.lengthSq() === 0){
+			moving = this.lastMoving || new Vector2D(1, 0);
+		};
+		var dir;
+		if(Math.abs(moving.x) >= Math.abs(moving.y)){
+			if(moving.x >= 0){
+				dir = "right";
+			} else {
+				dir = "left";
+			}
+		} else if(moving.y >= 0){
+			dir = "down";
+		} else {
+			dir = "up";
+		}
+		Communicator.instance.send({
+			type: "attack",
+			val: dir
+		});
+		this.doAttack(dir);
+	}
 
 	Player.prototype.die = function() {
 		var el = document.getElementById("canvas");
@@ -100,6 +137,11 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		this.gamepad.update();
 
 		var moving = this.movingVector.copy().add(this.externalMovingVector);
+
+		if(moving.lengthSq() > 0){
+			this.lastMoving = moving;
+		}
+
 		var scaledMoving = moving.multiplied(delta / 1000 * this.speed);
 
 		this.moveColliding(scaledMoving);

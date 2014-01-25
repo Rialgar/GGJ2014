@@ -11,8 +11,12 @@ define(["Vector2D", "Communicator", "Emitter"], function(Vector2D, Communicator,
 		target.addEventListener("keydown", function(evt) {
 			if(that.keys[evt.keyCode] !== true) {
 				that.keys[evt.keyCode] = true;
-				that.update();
-				that.emit("moveChange", that.movingVector);
+				if(Keyboard.moveKeys.indexOf(evt.keyCode) >= 0){
+					that.update();
+					that.emit("moveChange", that.movingVector);
+				} else if (evt.keyCode === Keyboard.KEY_SPACE) {
+					that.emit("attack");
+				}
 			}
 			if(evt.keyCode >= 37 && evt.keyCode <= 40 || evt.keyCode >= 48 && evt.keyCode <= 90 || evt.keyCode === 32) {
 				evt.preventDefault();
@@ -21,8 +25,10 @@ define(["Vector2D", "Communicator", "Emitter"], function(Vector2D, Communicator,
 		target.addEventListener("keyup", function(evt) {
 			if(that.keys[evt.keyCode] !== false) {
 				that.keys[evt.keyCode] = false;
-				that.update();
-				that.emit("moveChange", that.movingVector);
+				if(Keyboard.moveKeys.indexOf(evt.keyCode) >= 0){
+					that.update();
+					that.emit("moveChange", that.movingVector);
+				}
 			}
 			if(evt.keyCode >= 37 && evt.keyCode <= 40 || evt.keyCode >= 48 && evt.keyCode <= 90 || evt.keyCode === 32) {
 				evt.preventDefault();
@@ -47,5 +53,18 @@ define(["Vector2D", "Communicator", "Emitter"], function(Vector2D, Communicator,
 	Keyboard.KEY_LEFT = 37;
 	Keyboard.KEY_DOWN = 40;
 	Keyboard.KEY_RIGHT = 39;
+	Keyboard.KEY_SPACE = 32;
+
+	Keyboard.moveKeys = [
+		Keyboard.KEY_W,
+		Keyboard.KEY_A,
+		Keyboard.KEY_S,
+		Keyboard.KEY_D,
+		Keyboard.KEY_UP,
+		Keyboard.KEY_LEFT,
+		Keyboard.KEY_DOWN,
+		Keyboard.KEY_RIGHT
+	];
+
 	return Keyboard;
 });

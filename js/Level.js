@@ -166,7 +166,7 @@ define(["Vector2D", "Sprite"], function (Vector2D, Sprite) {
 						//TODO: do something with objects.
 						var tileset = getTileset(gid);
 						var sprite = new Sprite(getGeometry(gid), tileset.material, tileset.tileWidth, tileset.tileHeight);
-						sprite.setPosition(new Vector2D(x/that.tileWidth, y/that.tileHeight));
+						sprite.setPosition(new Vector2D(x/that.tileWidth, y/that.tileHeight - 1));
 						console.log(x,y);
 						sprites.push(sprite.mesh);
 					}

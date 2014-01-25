@@ -245,5 +245,8 @@
  </objectgroup>
  <objectgroup name="P1" width="110" height="220">
   <object gid="145" x="2477" y="15680"/>
+  <object gid="145" x="3035" y="15681"/>
+  <object gid="145" x="4074" y="15676"/>
+  <object gid="145" x="5279" y="15529"/>
  </objectgroup>
 </map>

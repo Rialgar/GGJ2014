@@ -34,7 +34,11 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		});
 		Communicator.instance.register(this, "attack", function(dir) {
 			this.doAttack(dir);
-		})
+		});
+		Communicator.instance.register(this, "damage", function(data) {
+			this.LP = data+1;
+			this.damage();
+		});
 	};
 
 	Player.prototype.refreshLifeDisplay = function() {
@@ -76,6 +80,7 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		this.gamepad.register(this, "attack", function() {
 			this.attack();
 		});
+		
 	};
 
 	Player.prototype.doAttack = function(dir) {

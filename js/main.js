@@ -45,7 +45,11 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 				var critter = game.critters[i];
 				if (critter && !critter.dead) {
 					if (critter.getPosition().x === rx && critter.getPosition().y === ry) {
-						Player.instance.damage();
+						if(game.pID === 0) {
+							Player.instance.damage(1);
+							Communicator.instance.send({type: "damage", val: Player.instance.LP});
+						}
+						
 						return true;
 					}
 				}
@@ -124,7 +128,11 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 				game.critters = critters;
 
 				for (var i = 0; i < critters.length; i++) {
-					critters[i].game = game;
+					if(game.pID === 0) {
+						// please simulate the critters if you are player 0
+						critters[i].game = game;	
+					}
+					
 					var otherCritter = findConnectedCritter(critters[i]);
 					if (critters[i].type === "P0" && game.pID === 0) {
 						game.level.mesh.add(critters[i].sprite.mesh);
@@ -132,20 +140,22 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 							critters.splice(critters.indexOf(otherCritter), 1);
 							delete otherCritter;
 							i--;
+							continue;
 						}
 					} else if (critters[i].type === "P1" && game.pID === 1) {
 						game.level.mesh.add(critters[i].sprite.mesh);
 						if (otherCritter) {
+							critters[i].otherID = otherCritter.id;
 							critters.splice(critters.indexOf(otherCritter), 1);
 							delete otherCritter;
 							i--;
+							continue;
 						}
 					}
 
 					critters[i].register(this, "land", function(data) {
 						if (game.critterCollide(Player.instance.position)) {
 							//wegpush
-							//TODO - check if you actually can go there
 							if(game.level.collides(Player.instance.position.copy().add(data.vec))) {
 								data.vec.scale(-1);
 							}

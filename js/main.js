@@ -125,6 +125,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 							critters.splice(critters.indexOf(otherCritter), 1);
 							delete otherCritter;
 							i--;
+							continue;
 						}
 					} else if (critters[i].type === "P1" && game.pID === 1) {
 						game.level.mesh.add(critters[i].sprite.mesh);
@@ -133,6 +134,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 							critters.splice(critters.indexOf(otherCritter), 1);
 							delete otherCritter;
 							i--;
+							continue;
 						}
 					}
 

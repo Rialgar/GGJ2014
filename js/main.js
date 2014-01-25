@@ -7,6 +7,12 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
 
   	game.level = new Level("./maps/placeholder.tmx")
   	game.level.load();
+  	
+  	var stats = new Stats();
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.top = '0px';
+	document.body.appendChild(stats.domElement);
+
 
   	game.draw = function(){
   		var ctx = this.canvas.getContext("2d");
@@ -19,6 +25,8 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
 		window.requestAnimationFrame(animate);
 		var delta = timeStamp - lastTime;
 		lastTime = timeStamp;
+		
+		stats.update();
 		
 		if(delta > 100) {
 			console.log("frame skipped because of too large delta");

@@ -1,4 +1,4 @@
-define(["Keyboard", "Vector2D", "Communicator", "Gamepad"], function(Keyboard, Vector2D, Communicator, Gamepad) {"use strict";
+define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(Keyboard, Vector2D, Sprite, Communicator, Gamepad) {"use strict";
 	var Player = function Player() {
 		this.position = new Vector2D();
 		this.LP = 3;
@@ -9,6 +9,8 @@ define(["Keyboard", "Vector2D", "Communicator", "Gamepad"], function(Keyboard, V
 		this.level = null;
 		
 		var that = this;
+
+		this.sprite = new Sprite("./maps/character.png", 95, 106, new Vector2D(46, 50), 3, {});
 		Communicator.instance.register(this, "moveChange", function(data) {
 			that.applyExternalMovement(data);
 		});
@@ -34,6 +36,7 @@ define(["Keyboard", "Vector2D", "Communicator", "Gamepad"], function(Keyboard, V
 		if(this.level.collides(this.position.x, this.position.y)) {
 			this.position.y -= dy;
 		}
+		this.sprite.setPosition(this.position);
 	};
 	
 	Player.prototype.draw = function(ctx) {

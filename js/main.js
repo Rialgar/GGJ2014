@@ -49,6 +49,8 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
   		game.scene.add(game.level.mesh);
   	});
   	
+  	game.scene.add(Player.instance.sprite.mesh);
+
   	Player.instance.level = game.level;
   	
   	var stats = new Stats();

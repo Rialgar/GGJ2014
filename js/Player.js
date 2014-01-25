@@ -27,18 +27,12 @@ define(["Keyboard", "Vector2D", "Communicator", "Gamepad"], function(Keyboard, V
 		var dx = movement.x;
 		this.position.x += dx;
 		if(this.level.collides(this.position.x, this.position.y)) {
-			
-		//}
-		//if (this.collisionMap.get(Math.round(this.position.x), Math.round(-this.position.y))) {
 			this.position.x -= dx;
-			console.log("resettet movement");
 		}
 		var dy = movement.y;
 		this.position.y += dy;
-		//if (this.collisionMap.get(Math.round(this.position.x), Math.round(-this.position.y))) {
 		if(this.level.collides(this.position.x, this.position.y)) {
 			this.position.y -= dy;
-			console.log("resettet movement");
 		}
 	};
 	

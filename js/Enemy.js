@@ -15,7 +15,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		Communicator.instance.register(this, "jump", function(data) {
 			if(data.id === that.id || data.id === that.otherID) {
 				// process the jump data
-				that.jump(data.vec);
+				that.jump(new Vector2D(data.vec.x,data.vec.y).sub(this.getPosition()));
 			}
 		});
 		
@@ -74,10 +74,10 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 
 				if (d1.lengthSq() > 0 && !game.level.collides(t1)) {
 					this.jump(d1);
-					Communicator.instance.send({type: "jump", val:{id: this.id, vec : d1}});
+					Communicator.instance.send({type: "jump", val:{id: this.id, vec : this.target}});
 				} else if (d2.lengthSq() > 0 && !game.level.collides(t2)) {
 					this.jump(d2);
-					Communicator.instance.send({type: "jump", val:{id: this.id, vec : d2}});
+					Communicator.instance.send({type: "jump", val:{id: this.id, vec : this.target}});
 				}
 			}
 		}

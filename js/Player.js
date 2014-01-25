@@ -22,9 +22,11 @@ define(["Keyboard", "Vector2D", "Communicator", "Gamepad"], function(Keyboard, V
 	Player.prototype.registerEventHandlers = function() {
 		this.keyboard.register(this, "moveChange", function(data) {
 			this.movingVector = data;
+			Communicator.instance.send({type: "moveChange", val: data});
 		});
 		this.gamepad.register(this, "moveChange", function(data) {
 			this.movingVector = data;
+			Communicator.instance.send({type: "moveChange", val: data});
 		});
 	};
 	

@@ -54,7 +54,22 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 			return false;
 		};
 
-		game.buffer = new THREE.WebGLRenderTarget(w, h);
+		game.critterHit = function(pos, dir) {
+			for (var i = 0; i < game.critters.length; i++) {
+				var d = game.critters[i].getPosition().sub(pos);
+				if(d.lengthSq() <= 4){
+					//console.log(d.x*pos.x + d.y*pos.y);
+					if(d.x*pos.x + d.y*pos.y > 0) {
+						game.critters[i].damage(dir);
+						return;
+					}
+				}
+			}
+		}
+
+		game.buffer = new THREE.WebGLRenderTarget(w, h,{
+			minFilter: THREE.LinearFilter
+		});
 
 		game.fullScreenScene = new THREE.Scene();
 

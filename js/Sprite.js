@@ -105,7 +105,6 @@ define(["Vector2D"], function(Vector2D) {
 		},
 
 		setAnimation: function(name){
-			console.log(name);
 			if(!name){
 				this.setVertexUVsForAnimationFrame(this.animations["idle"][0]);
 				this.activeAnimation = false;

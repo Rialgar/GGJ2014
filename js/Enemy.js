@@ -2,9 +2,13 @@ define(["Sprite", "Vector2D"], function(Sprite, Vector2D){
 	var signum = function(x){
 		return x > 0 ? 1 : x < 0 ? -1 : 0;
 	}
-	var Enemy = function(geom, material, width, height, type){
+
+	var jumpTime = 800;
+
+	var Enemy = function(geom, material, width, height, type, LP){
 		this.sprite = new Sprite(geom, material, width, height);
 		this.type = type;
+		this.LP = LP || 0;
 		this.game = null;
 	};
 
@@ -15,6 +19,19 @@ define(["Sprite", "Vector2D"], function(Sprite, Vector2D){
 
 		setPosition: function(pos){
 			this.sprite.setPosition(pos);
+		},
+
+		die: function(){
+			this.sprite.character.material.color = 0x888888;
+			this.sprite.character.material.needsUpdate = true;
+			this.dead = true;
+		},
+
+		damage: function(dir){
+			this.LP--;
+			if(this.LP < 0){
+				this.die();
+			}
 		},
 
 		update: function(delta){
@@ -28,15 +45,17 @@ define(["Sprite", "Vector2D"], function(Sprite, Vector2D){
 					var fr = this.from.copy();
 					var tg = this.target.copy();
 
-					fr.scale(this.animTime / 1000);
-					tg.scale(1 - this.animTime / 1000);
+					fr.scale(this.animTime / jumpTime);
+					tg.scale(1 - this.animTime / jumpTime);
 
 					tg.add(fr);
 					this.sprite.setPosition(tg);
 
-					this.sprite.setJumpHeight(1 - (this.animTime-500)/500 * (this.animTime-500)/500);
+					var d = (this.animTime-jumpTime/2)/(jumpTime/2);
+
+					this.sprite.setJumpHeight(1 - d*d);
 				}
-			}else if(this.game){
+			}else if(!this.dead && this.game){
 				var dir = game.getRoundedPlayerPosition();
 				dir.sub(this.getPosition());
 
@@ -68,7 +87,7 @@ define(["Sprite", "Vector2D"], function(Sprite, Vector2D){
 				this.from = this.getPosition();
 				this.target = this.getPosition();
 				this.target.add(direction);
-				this.animTime = 1000;
+				this.animTime = jumpTime;
 			}
 		}
 	};

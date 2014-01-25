@@ -1,4 +1,4 @@
-define(["Sprite", "Vector2D", "Emitter"], function(Sprite, Vector2D, Emitter) {
+define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vector2D, Emitter, Communicator) {
 	var signum = function(x) {
 		return x > 0 ? 1 : x < 0 ? -1 : 0;
 	}
@@ -7,7 +7,18 @@ define(["Sprite", "Vector2D", "Emitter"], function(Sprite, Vector2D, Emitter) {
 		this.sprite = new Sprite(geom, material, width, height);
 		this.type = type;
 		this.jumpingDirection = null;
+		this.id = 0;
 		this.game = null;
+		this.otherID = null;
+		var that = this;
+		
+		Communicator.instance.register(this, "jump", function(data) {
+			if(data.id === that.id || data.id === that.otherID) {
+				// process the jump data
+				that.jump(data.vec);
+			}
+		});
+		
 	};
 
 	Enemy.prototype = Object.create(Emitter.prototype);
@@ -63,8 +74,10 @@ define(["Sprite", "Vector2D", "Emitter"], function(Sprite, Vector2D, Emitter) {
 
 				if (d1.lengthSq() > 0 && !game.level.collides(t1)) {
 					this.jump(d1);
+					Communicator.instance.send({type: "jump", val:{id: this.id, vec : d1}});
 				} else if (d2.lengthSq() > 0 && !game.level.collides(t2)) {
 					this.jump(d2);
+					Communicator.instance.send({type: "jump", val:{id: this.id, vec : d2}});
 				}
 			}
 		}

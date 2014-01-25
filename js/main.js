@@ -109,7 +109,11 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 				game.critters = critters;
 
 				for (var i = 0; i < critters.length; i++) {
-					critters[i].game = game;
+					if(game.pID === 0) {
+						// please simulate the critters if you are player 0
+						critters[i].game = game;	
+					}
+					
 					var otherCritter = findConnectedCritter(critters[i]);
 					if (critters[i].type === "P0" && game.pID === 0) {
 						game.level.mesh.add(critters[i].sprite.mesh);
@@ -121,6 +125,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 					} else if (critters[i].type === "P1" && game.pID === 1) {
 						game.level.mesh.add(critters[i].sprite.mesh);
 						if (otherCritter) {
+							critters[i].otherID = otherCritter.id;
 							critters.splice(critters.indexOf(otherCritter), 1);
 							delete otherCritter;
 							i--;

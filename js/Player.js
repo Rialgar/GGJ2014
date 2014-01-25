@@ -77,12 +77,12 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 	Player.prototype.damage = function() {
 		if (!this.invincible) {
 			this.LP--;
+			this.refreshLifeDisplay();
+			this.invincible = true;
 			if (this.LP < 0) {
 				this.die();
 				return;
 			}
-			this.refreshLifeDisplay();
-			this.invincible = true;
 			var that = this;
 			window.setTimeout(function() {
 				that.invincible = false;

@@ -1,4 +1,5 @@
 define(["Vector2D"], function (Vector2D) {
+	var collisions = [4];
 	var Level = function Level(file) {
 		this.file = file;
 		this.background = document.createElement("canvas");
@@ -176,7 +177,7 @@ define(["Vector2D"], function (Vector2D) {
 		collides: function(x,y) {
 			var cx = Math.round(x);
 			var cy = Math.round(y);
-			if(!this.tiles || !this.tiles[cx] || !this.tiles[cx][cy] || [4].indexOf(this.tiles[cx][cy]) !== -1) {
+			if(!this.tiles || !this.tiles[cx] || !this.tiles[cx][cy] || collisions.indexOf(this.tiles[cx][cy]) !== -1) {
 				return true;
 			}
 			return false;

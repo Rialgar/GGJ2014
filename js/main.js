@@ -23,19 +23,21 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
 	var lastTime = null;
 	var animate = function(timeStamp) {
 		window.requestAnimationFrame(animate);
-		var delta = timeStamp - lastTime;
-		lastTime = timeStamp;
-		
 		stats.update();
-		
-		if(delta > 100) {
-			console.log("frame skipped because of too large delta");
-			return;
-		}
-		Player.instance.update(delta);
+
 		game.draw();
 	}
 	animate();
+	
+	var d = new Date().valueOf();
+	var delta = 1;
+	var now = 0;
+	window.setInterval(function() {
+		now = new Date().valueOf();
+		delta = now - d;
+		d = now;
+		Player.instance.update(delta);
+	},10);
 
 	//DEBUG;
   	window.game = game;

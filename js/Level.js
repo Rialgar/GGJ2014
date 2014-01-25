@@ -6,6 +6,33 @@ define(function () {
 	Level.prototype = {
 		constructor : Level,
 
+		draw: function(ctx, size, offset) {
+			var c = 0;
+			for (var x = 0; x < this.width; x++) {
+	  			for (var y = 0; y < this.height; y++) {
+	  				var tileset = this.tileset;
+
+	  				var rx = (x + offset.x) * tileset.tileWidth;
+	  				var ry = (y + offset.y) * tileset.tileHeight;
+	  				if( rx > -tileset.tileWidth && rx < size.x + tileset.tileWidth &&
+	  					ry > -tileset.tileHeight && ry < size.y + tileset.tileHeight
+	  				){
+	  					c++;
+		  				var tile = this.tiles[x][y];
+		  				var tX = (tile-1) % tileset.width;
+		  				var tY = (tile-tX-1) / tileset.height;
+		  				tX *= tileset.tileWidth;
+		  				tY *= tileset.tileHeight
+		  				ctx.drawImage(tileset.image,
+		  					tX, tY, tileset.tileWidth, tileset.tileHeight,
+		  					rx, ry, tileset.tileWidth, tileset.tileHeight
+		  				);
+		  			}
+	  			};
+	  		};
+	  		console.log(c);
+		},
+
 		load : function(cb) {
 			var req = new XMLHttpRequest();
 			req.open("GET", this.file, true);
@@ -20,19 +47,29 @@ define(function () {
 					//determine the size of the map
 					var map = xmlDoc.firstChild;
 
+					that.width = parseInt(map.getAttribute("width"));
+					that.height = parseInt(map.getAttribute("width"));
+
 					// find the tileset
 					var tileset = map.getElementsByTagName("tileset")[0];
-					var tileWidth = tileset.getAttribute("tilewidth");
-					var tileheight = tileset.getAttribute("tileheight");
+					var tileWidth = parseInt(tileset.getAttribute("tilewidth"));
+					var tileHeight = parseInt(tileset.getAttribute("tileheight"));
+					
 					var imageNode = tileset.childNodes[1];
-					var imageWidth = imageNode.getAttribute("width");
-					var imageHeight = imageNode.getAttribute("height");
+					var imageWidth = parseInt(imageNode.getAttribute("width"));
+					var imageHeight = parseInt(imageNode.getAttribute("height"));
 					var imgPath = imageNode.getAttribute("source");
-					imgPath = imgPath.substr(1);
+					imgPath = "./maps/" + imgPath;
 
-					var image = new Image();
-					image.src = imgPath;
-					image.onload = function() {	
+					that.tileset = {
+						tileWidth: tileWidth,
+						tileHeight: tileHeight,		
+						width: imageWidth/tileWidth,
+						height: imageHeight/tileHeight,
+						image: new Image()
+					};
+					that.tileset.image.src = imgPath;
+					that.tileset.image.onload = function() {	
 						//TODO: do we need to do something here?
 					};
 
@@ -42,8 +79,8 @@ define(function () {
 					var layers = map.getElementsByTagName("layer");
 					for (var i = 0; i < layers.length; i++) {
 						var layer = layers[i];
-						var layerWidth = layer.getAttribute("width");
-						var layerHeight = layer.getAttribute("height");
+						var layerWidth = parseInt(layer.getAttribute("width"));
+						var layerHeight = parseInt(layer.getAttribute("height"));
 						var data = layer.childNodes[1];
 						var tilesArray = data.textContent.split(",");
 						for (var x = 0; x < layerWidth; x++) {

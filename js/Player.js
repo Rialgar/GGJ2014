@@ -15,7 +15,7 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		
 		var that = this;
 
-		this.sprite = new Sprite("./maps/character.png", 95, 106, new Vector2D(46, 50), 3, {});
+		this.sprite = new Sprite("./maps/character.png", 95, 106, new Vector2D(0, 0), 4, {});
 		this.sprite.setPosition(this.position);
 		Communicator.instance.register(this, "moveChange", function(data) {
 			this.position.set(data.pos.x, data.pos.y);

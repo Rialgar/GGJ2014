@@ -40,9 +40,9 @@ define(["Vector2D", "Communicator"], function(Vector2D, Communicator) {"use stri
 			
 			this.movingVector.x = this.ownMovingVector.x + this.externalMovingVector.x;
 			this.movingVector.y = this.ownMovingVector.y + this.externalMovingVector.y;
-			this.movingVector.normalize();
-//			console.log(this.movingVector);
-//			console.log(this.externalMovingVector);
+
+			// this line assures that all movement is in constant speed
+			//this.movingVector.normalize();
 			
 		}
 	};

@@ -2,7 +2,7 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 	var Player = function Player() {
 		this.position = new Vector2D(8,5);
 		
-		this.LP = 3;
+		this.LP = 4;
 		this.invincible = false;
 		
 		this.keyboard = new Keyboard(document);
@@ -13,6 +13,7 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		this.speed = 3;
 		
 		this.registerEventHandlers();
+		this.refreshLifeDisplay();
 		
 		this.game = null;
 		
@@ -25,6 +26,18 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 			that.applyExternalMovement(data.vec);
 			this.sprite.setPosition(this.position);
 		});
+	};
+	
+	Player.prototype.refreshLifeDisplay = function() {
+		var el = document.getElementById("lifeDisplay");
+		while(el.firstChild) {
+			el.removeChild(el.firstChild);
+		}
+		for(var i = 0; i < this.LP; i++) {
+			var im = document.createElement("img");
+			im.setAttribute("src", "./maps/character.png");
+			el.appendChild(im);
+		}
 	};
 	
 	Player.prototype.registerEventHandlers = function() {
@@ -46,8 +59,8 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 	
 	Player.prototype.damage = function() {
 		if(!this.invincible) {
-			console.log("I AM VERY HURT");
 			this.LP--;
+			this.refreshLifeDisplay();
 			this.invincible = true;
 			var that = this;
 			window.setTimeout(function() {

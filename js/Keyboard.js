@@ -33,7 +33,7 @@ define(["Vector2D", "Communicator"], function(Vector2D, Communicator) {"use stri
 		constructor : Keyboard,
 		update : function() {
 			this.movingVector.x = this.keys[Keyboard.KEY_D] + this.keys[Keyboard.KEY_RIGHT] - this.keys[Keyboard.KEY_A] - this.keys[Keyboard.KEY_LEFT] + this.externalMovingVector.x;
-			this.movingVector.y = -(this.keys[Keyboard.KEY_W] + this.keys[Keyboard.KEY_UP] - this.keys[Keyboard.KEY_S] - this.keys[Keyboard.KEY_DOWN] + this.externalMovingVector.y);
+			this.movingVector.y = -(this.keys[Keyboard.KEY_W] + this.keys[Keyboard.KEY_UP] - this.keys[Keyboard.KEY_S] - this.keys[Keyboard.KEY_DOWN]) + this.externalMovingVector.y;
 			this.movingVector.normalize();
 		}
 	};

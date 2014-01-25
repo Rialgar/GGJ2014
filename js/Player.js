@@ -19,6 +19,7 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		Communicator.instance.register(this, "moveChange", function(data) {
 			this.position.set(data.pos.x, data.pos.y);
 			that.applyExternalMovement(data.vec);
+			this.sprite.setPosition(this.position);
 		});
 	};
 	

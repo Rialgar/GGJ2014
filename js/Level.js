@@ -1,5 +1,5 @@
 define(["Vector2D"], function (Vector2D) {
-	var collisions = [4];
+	var collisions = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20,21,22,24,29,30,31,33,34,36,37,38,45,46,47,48,56,57,60];
 	var Level = function Level(file) {
 		this.file = file;
 		this.background = document.createElement("canvas");

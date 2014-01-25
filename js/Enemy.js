@@ -5,9 +5,11 @@ define(["Sprite", "Vector2D", "Emitter"], function(Sprite, Vector2D, Emitter) {
 
 	var jumpTime = 800;
 
-	var Enemy = function(geom, material, width, height, type, LP){
+	var Enemy = function(geom, material, deadMaterial, width, height, type, LP){
 		Emitter.call(this);
 		this.sprite = new Sprite(geom, material, width, height);
+		this.deadMaterial = deadMaterial;
+		this.deadMaterial.transparent = true;
 		this.type = type;
 		this.jumpingDirection = null;
 		this.LP = LP || 0;
@@ -25,8 +27,7 @@ define(["Sprite", "Vector2D", "Emitter"], function(Sprite, Vector2D, Emitter) {
 		this.sprite.setPosition(pos);
 	};
 	Enemy.prototype.die = function(){
-			this.sprite.character.material.color = 0x888888;
-			this.sprite.character.material.needsUpdate = true;
+			this.sprite.character.material = this.deadMaterial;
 			this.dead = true;
 		};
 

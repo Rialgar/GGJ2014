@@ -43,7 +43,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 			var ry = Math.round(pos.y);
 			for (var i = 0; i < game.critters.length; i++) {
 				var critter = game.critters[i];
-				if (critter) {
+				if (critter && !critter.dead) {
 					if (critter.getPosition().x === rx && critter.getPosition().y === ry) {
 						Player.instance.damage();
 						return true;
@@ -55,13 +55,13 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 
 		game.critterHit = function(pos, dir) {
 			for (var i = 0; i < game.critters.length; i++) {
-				var d = game.critters[i].getPosition().sub(pos);
-				if(d.lengthSq() <= 4){
+				var d = game.critters[i].getPosition().sub(dir.multiplied(0.5/dir.length()).add(pos));
+				if(d.lengthSq() <= 2){
 					//console.log(d.x*pos.x + d.y*pos.y);
-					if(d.x*pos.x + d.y*pos.y > 0) {
+					//if(d.x*dir.x + d.y*dir.y > 0) {
 						game.critters[i].damage(dir);
 						return;
-					}
+					//}
 				}
 			}
 		}

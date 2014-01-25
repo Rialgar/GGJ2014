@@ -28,14 +28,14 @@ require(['domReady', "Communicator", "Level", "Player"], function(domReady, Comm
 			game.renderer.setSize(window.innerWidth, window.innerHeight);
 		}
 
-		var critters = [];
+		game.critters = [];
 		game.critterCollide = function(pos) {
 			var rx = Math.round(pos.x);
 			var ry = Math.round(pos.y);
-			for(var i = 0; i < critters.length; i++) {
-				var critter = critters[i];
+			for(var i = 0; i < game.critters.length; i++) {
+				var critter = game.critters[i];
 				if(critter) {
-					if(critter.position.x === rx && critter.position.y === -ry) {
+					if(critter.getPosition().x === rx && critter.getPosition().y === ry) {
 						//TODO: damage the player or something
 						return true;
 					}
@@ -47,11 +47,8 @@ require(['domReady', "Communicator", "Level", "Player"], function(domReady, Comm
 		game.level = new Level("./maps/test01.tmx")
 		game.level.load(function(sprites) {
 			console.log("done");
-			critters = sprites;
+			game.critters = sprites;
 			game.camera = new THREE.OrthographicCamera(-w / 2 / game.level.tileWidth, w / 2 / game.level.tileWidth, h / 2 / game.level.tileHeight, -h / 2 / game.level.tileHeight, -500, 1000);
-			for (var i = 0; i < sprites.length; i++) {
-				game.scene.add(sprites[i]);
-			}
 			game.scene.add(game.level.mesh);
 		});
 
@@ -105,6 +102,9 @@ require(['domReady', "Communicator", "Level", "Player"], function(domReady, Comm
 			delta = now - d;
 			d = now;
 			Player.instance.update(delta);
+			for (var i = 0; i < game.critters.length; i++) {
+				game.critters[i].update(delta);
+			};
 		}, 10);
 
 		//DEBUG;

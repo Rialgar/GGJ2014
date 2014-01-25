@@ -50,6 +50,10 @@ define(["Vector2D"], function(Vector2D) {
 		setPosition : function(pos) {
 			this.mesh.position.x = pos.x;
 			this.mesh.position.y = -pos.y;
+		},
+
+		setJumpHeight : function(height) {
+			this.character.position.y = this.mid.y+height;
 		}
 	};
 

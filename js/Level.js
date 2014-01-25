@@ -1,4 +1,4 @@
-define(["Vector2D", "Sprite"], function (Vector2D, Sprite) {
+define(["Vector2D", "Sprite", "Enemy"], function (Vector2D, Sprite, Enemy) {
 	var collisions = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20,21,22,24,29,30,31,33,34,36,37,38,45,46,47,48,56,57,60];
 	var Level = function Level(file) {
 		this.file = file;
@@ -155,7 +155,7 @@ define(["Vector2D", "Sprite"], function (Vector2D, Sprite) {
 					that.mesh = new THREE.Mesh( that.geom, that.tilesets[0].material);
 
 					// process the map objects
-					var sprites = [];
+					var enemies = [];
 					
 					var objects = map.getElementsByTagName("object");
 					for (var i = 0; i < objects.length; i++) {
@@ -165,14 +165,16 @@ define(["Vector2D", "Sprite"], function (Vector2D, Sprite) {
 						var gid = parseInt(object.getAttribute("gid"));
 						//TODO: do something with objects.
 						var tileset = getTileset(gid);
-						var sprite = new Sprite(getGeometry(gid), tileset.material, tileset.tileWidth, tileset.tileHeight);
-						sprite.setPosition(new Vector2D(Math.round(x/that.tileWidth), Math.round(y/that.tileHeight)-1));
-						console.log(x,y);
-						sprites.push(sprite.mesh);
+						var enemy = new Enemy(getGeometry(gid), tileset.material, tileset.tileWidth, tileset.tileHeight);
+						enemy.setPosition(new Vector2D(Math.round(x/that.tileWidth), Math.round(y/that.tileHeight)-1));
+
+						that.mesh.add(enemy.sprite.mesh);
+
+						enemies.push(enemy);
 					}
 					if(typeof cb === "function")
 					{
-						cb(sprites);
+						cb(enemies);
 					}
 				}
 			}

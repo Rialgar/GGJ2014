@@ -1,5 +1,5 @@
 define(["Vector2D", "Sprite", "Enemy"], function (Vector2D, Sprite, Enemy) {
-	var collisions = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20,21,22,24,29,30,31,33,34,36,37,38,45,46,47,48,56,57,60];
+	var collisions = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20,21,22,24,28,30,31,33,34,36,37,38,45,46,47,48,49,50,51,52,53,54,56,57,58,59,60,61,62,70,71];
 	var Level = function Level(file) {
 		this.file = file;
 		this.background = document.createElement("canvas");

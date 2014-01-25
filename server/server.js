@@ -40,8 +40,6 @@ var setResponseHeaderByFileEnding = function(ext, response) {
 
 var path = "..";
 
-var sockets = [];
-
 
 function handler (request, response) {
   var req = url.parse(request.url);
@@ -65,9 +63,17 @@ function handler (request, response) {
   });
 }
 
+var sockets = [];
+var waitingSocket = null;
 io.sockets.on('connection', function (socket) {
   sockets.push(socket);
-  socket.emit("init", sockets.length % 2);
+  if(!waitingSocket) {
+  	waitingSocket = socket;
+  } else {
+  	waitingSocket.emit("init", 0);
+  	socket.emit("init", 1);
+  	waitingSocket = null;
+  }
   socket.on("data", function (data) {
     for(var i = 0; i< sockets.length; i++) {
     	if(sockets[i] && sockets[i] !== socket) {

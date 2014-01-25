@@ -28,23 +28,12 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 			game.renderer.setSize(window.innerWidth, window.innerHeight);
 		}
 
-		game.level = new Level("./maps/test01.tmx")
-		game.level.load(function(critters) {
-			game.critters = critters;
-
-			for (var i = 0; i < critters.length; i++) {
-				critters[i].game = game;
-			};
-
-			game.camera = new THREE.OrthographicCamera(-w / 2 / game.level.tileWidth, w / 2 / game.level.tileWidth, h / 2 / game.level.tileHeight, -h / 2 / game.level.tileHeight, -500, 1000);
-			game.scene.add(game.level.mesh);
-		});
 
 		game.scene.add(Player.instance.sprite.mesh);
 
 		Player.instance.game = game;
 
-		game.getRoundedPlayerPosition = function(){
+		game.getRoundedPlayerPosition = function() {
 			return new Vector2D(Math.round(player.position.x), Math.round(player.position.y));
 		}
 
@@ -52,10 +41,10 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 		game.critterCollide = function(pos) {
 			var rx = Math.round(pos.x);
 			var ry = Math.round(pos.y);
-			for(var i = 0; i < game.critters.length; i++) {
+			for (var i = 0; i < game.critters.length; i++) {
 				var critter = game.critters[i];
-				if(critter) {
-					if(critter.getPosition().x === rx && critter.getPosition().y === ry) {
+				if (critter) {
+					if (critter.getPosition().x === rx && critter.getPosition().y === ry) {
 						//TODO: damage the player or something
 						Player.instance.damage();
 						return true;
@@ -102,20 +91,41 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 
 			game.draw();
 		}
-		animate();
-
 		var d = new Date().valueOf();
 		var delta = 1;
 		var now = 0;
-		window.setInterval(function() {
-			now = new Date().valueOf();
-			delta = now - d;
-			d = now;
-			Player.instance.update(delta);
-			for (var i = 0; i < game.critters.length; i++) {
-				game.critters[i].update(delta);
-			};
-		}, 10);
+
+		game.initialize = function(id) {
+			game.pID = id;
+			game.level = new Level("./maps/test01.tmx")
+			game.level.load(function(critters) {
+				game.critters = critters;
+
+				for (var i = 0; i < critters.length; i++) {
+					critters[i].game = game;
+					console.log(critters[i].type, game.pID);
+					if (critters[i].type === "P0" && game.pID === 0) {
+						game.level.mesh.add(critters[i].sprite.mesh);
+					} else if (critters[i].type === "P1" && game.pID === 1) {
+						game.level.mesh.add(critters[i].sprite.mesh);
+					}
+				};
+
+				game.camera = new THREE.OrthographicCamera(-w / 2 / game.level.tileWidth, w / 2 / game.level.tileWidth, h / 2 / game.level.tileHeight, -h / 2 / game.level.tileHeight, -500, 1000);
+				game.scene.add(game.level.mesh);
+				animate();
+				window.setInterval(function() {
+					now = new Date().valueOf();
+					delta = now - d;
+					d = now;
+					Player.instance.update(delta);
+					for (var i = 0; i < game.critters.length; i++) {
+						game.critters[i].update(delta);
+					};
+				}, 10);
+			});
+		};
+		Communicator.instance.game = game;
 
 		//DEBUG;
 		window.game = game;

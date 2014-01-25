@@ -6,9 +6,43 @@ var app = require('http').createServer(handler)
 
 app.listen(80);
 
+var fileEnding = function(filename) {
+	var idx = filename.lastIndexOf(".");
+	return filename.substr(idx + 1);
+};
+
+var setResponseHeaderByFileEnding = function(ext, response) {
+	switch(ext) {
+		case 'html':
+			response.setHeader("Content-Type", "text/html");
+			break;
+		case 'css':
+			response.setHeader("Content-Type", "text/css");
+			break;
+		case 'js':
+			response.setHeader("Content-Type", "text/javascript");
+			break;
+		case 'jpg':
+			response.setHeader("Content-Type", "image/jpeg");
+			break;
+		case 'png':
+			response.setHeader("Content-Type", "image/png");
+			break;
+		case 'gif':
+			response.setHeader("Content-Type", "image/gif");
+			break;
+		case 'tmx':
+			response.setHeader("Content-Type", "application/xml");
+			break;
+	}
+};
+
+
+
 var path = "..";
 
 var sockets = [];
+
 
 function handler (request, response) {
   var req = url.parse(request.url);
@@ -24,6 +58,8 @@ function handler (request, response) {
       response.writeHead(500);
       return response.end('Error loading file');
     }
+	var ext = fileEnding(uri);
+	setResponseHeaderByFileEnding(ext, response);
 
     response.writeHead(200);
     response.end(data);

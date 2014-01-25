@@ -1,4 +1,4 @@
-require(["domReady", "Communicator", "Level"], function (domReady, Communicator, Level) {
+require(['domReady', "Communicator", "Level", "Player"], function (domReady, Communicator, Level, Player) {
   domReady(function () {
 
   	var game = {};
@@ -14,13 +14,19 @@ require(["domReady", "Communicator", "Level"], function (domReady, Communicator,
   		this.level.draw(ctx, {x:this.canvas.width, y:this.canvas.height}, {x:0, y:0});
   	}
 
-	var comm = new Communicator();
-	comm.connect();
-	comm.send("huhu");
-	
-	window.setInterval(function() {
-		comm.send("test");
-	}, 1000);
+	var lastTime = null;
+	var animate = function(timeStamp) {
+		window.requestAnimationFrame(animate);
+		var delta = timeStamp - lastTime;
+		lastTime = timeStamp;
+		
+		if(delta > 100) {
+			console.log("frame skipped because of too large delta");
+			return;
+		}
+		Player.instance.update(delta);
+	}
+	animate();
 
   	window.game = game;
   });

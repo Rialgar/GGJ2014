@@ -79,18 +79,18 @@ define(function () {
 						};
 						tileset.texture.magFilter = THREE.NearestFilter;
 						tileset.texture.minFilter = THREE.NearestFilter;
-						tileset.material = new THREE.MeshBasicMaterial( { color: 0xffff00, map: tileset.texture,  } );
+						tileset.material = new THREE.MeshBasicMaterial( { color: 0xffffff, map: tileset.texture,  } );
 
 						tileset.geometries = [];
 						for (var x = 0; x < tileset.width; x++) {
 				  			for (var y = 0; y < tileset.height; y++) {
-				  				var id = tileset.minId + y*tileset.width + x;
+				  				var id = y*tileset.width + x;
 
 				  				var x0 = x / tileset.width;
-				  				var y0 = 1-(y / tileset.height);
+				  				var y1 = 1-(y / tileset.height);
 
 				  				var x1 = (x+1) / tileset.width;
-				  				var y1 = 1-((y+1) / tileset.height);
+				  				var y0 = 1-((y+1) / tileset.height);
 
 				  				var geometry = new THREE.PlaneGeometry(
 				  					tileset.tileWidth/that.tileWidth,
@@ -117,7 +117,7 @@ define(function () {
 				  				geometry.faceVertexUvs[0][1][2].x = x1;
 				  				geometry.faceVertexUvs[0][1][2].y = y1;
 
-				  				tileset.geometries[id-tileset.minId] = geometry;
+				  				tileset.geometries[id] = geometry;
 				  			}
 				  		}
 
@@ -134,8 +134,10 @@ define(function () {
 
 					function getGeometry(tileId){
 						var tileset = getTileset(tileId);
-						return tileset.geometries[tileId -tileset.minId];
+						return tileset.geometries[tileId - tileset.minId];
 					}
+
+					window.getGeometry = getGeometry;
 
 					that.tiles = [];
 					that.geom = new THREE.Geometry();

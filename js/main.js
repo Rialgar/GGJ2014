@@ -8,10 +8,10 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
   	game.ratio = game.canvas.width/game.canvas.height;
 
   	game.camera = new THREE.OrthographicCamera(
-  		-960 / 32 / 16,
-  		 960 / 32 / 16,
-  		 540 / 32 / 16,
-  		-540 / 32 / 16,
+  		-960 / 32,
+  		 960 / 32,
+  		 540 / 32,
+  		-540 / 32,
   		-500, 1000
   	);
 
@@ -34,7 +34,6 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
 
 	function onWindowResize() {
 		game.renderer.setSize(window.innerWidth, window.innerHeight);
-
 	}
 
   	game.level = new Level("./maps/placeholder.tmx")
@@ -50,6 +49,8 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
 
 
   	game.draw = function(){
+  		this.camera.position.x = Player.instance.position.x;
+  		this.camera.position.y = -Player.instance.position.y;
   		this.renderer.render(this.scene, this.camera);
   		//this.level.draw(ctx, {x:this.canvas.width, y:this.canvas.height}, Player.instance.position);
   	}

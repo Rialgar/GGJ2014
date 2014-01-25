@@ -82,6 +82,8 @@ define(["Vector2D"], function(Vector2D) {
 			//0 1 2 -> 1 1
 			this.geometry.faceVertexUvs[0][1][2].x = x1;
 			this.geometry.faceVertexUvs[0][1][2].y = y1;
+
+			this.geometry.uvsNeedUpdate = true;
 		},
 
 		initializeUV: function (rows, columns) {
@@ -103,6 +105,7 @@ define(["Vector2D"], function(Vector2D) {
 		},
 
 		setAnimation: function(name){
+			console.log(name);
 			if(!name){
 				this.setVertexUVsForAnimationFrame(this.animations["idle"][0]);
 				this.activeAnimation = false;
@@ -111,6 +114,7 @@ define(["Vector2D"], function(Vector2D) {
 				if(this.activeAnimation){
 					this.animationTime = this.activeAnimation[0].time;
 					this.animationStep = 0;
+					this.setVertexUVsForAnimationFrame(this.activeAnimation[0]);
 				}
 			}
 		},

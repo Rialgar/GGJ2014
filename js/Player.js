@@ -19,8 +19,12 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 
 		var that = this;
 
-		this.sprite = new Sprite("./maps/character.png", 95, 106, 1, 2, new Vector2D(0, 0), 4, {
-			"idle": [{x:0, y:0, time:1000}]
+		this.sprite = new Sprite("./maps/kastanieSheet.png", 128, 128, 1, 5, new Vector2D(0, 0), 4, {
+			"idle": [{x:0, y:0, time:1000}],
+			"up": [{x:1, y:0, time:600}],
+			"down": [{x:2, y:0, time:600}],
+			"left": [{x:3, y:0, time:600}],
+			"right": [{x:4, y:0, time:600}]
 		});
 		this.sprite.setPosition(this.position);
 		Communicator.instance.register(this, "moveChange", function(data) {
@@ -99,6 +103,8 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		var scaledMoving = moving.multiplied(delta / 1000 * this.speed);
 
 		this.moveColliding(scaledMoving);
+
+		this.sprite.update(delta);
 	};
 
 	Player.prototype.moveColliding = function(movement) {

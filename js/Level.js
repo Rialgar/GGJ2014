@@ -7,36 +7,8 @@ define(function () {
 	Level.prototype = {
 		constructor : Level,
 
-		bake: function(){
-			console.log("Backe Backe Kuchen!")
-			this.background.width = this.tileWidth * this.width;
-			this.background.height = this.tileHeight * this.height;
-			var ctx = this.background.getContext("2d");
-			ctx.clearRect(0, 0, this.background.width, this.background.height);
-			for (var x = 0; x < this.width; x++) {
-	  			for (var y = 0; y < this.height; y++) {
-	  				var tileset = this.tiles[x][y].tileset;
-
-	  				var rx = Math.round(x * this.tileWidth);
-	  				var ry = Math.round(y * this.tileHeight);
-	  				ry += this.tileHeight - tileset.tileHeight;
-
-  					var tile = this.tiles[x][y];
-	  				var tX = (tile.id-tileset.minId) % tileset.width;
-	  				var tY = (tile.id-tX-tileset.minId) / tileset.height;
-	  				tX *= tileset.tileWidth;
-	  				tY *= tileset.tileHeight
-	  				ctx.drawImage(tileset.image,
-	  					tX, tY, tileset.tileWidth, tileset.tileHeight,
-	  					rx, ry, tileset.tileWidth, tileset.tileHeight
-	  				);
-	  			};
-	  		};
-	  		console.log("Background ready");
-		},
-
 		draw: function(ctx, size, offset) {
-			/*for (var x = 0; x < this.width; x++) {
+			for (var x = 0; x < this.width; x++) {
 	  			for (var y = 0; y < this.height; y++) {
 	  				var tileset = this.tiles[x][y].tileset;
 
@@ -58,13 +30,7 @@ define(function () {
 		  				);
 		  			}
 	  			};
-	  		};*/
-	  		var rx = Math.round(offset.x * this.tileWidth);
-	  		var ry = Math.round(offset.y * this.tileHeight);
-	  		ctx.drawImage(this.background,
-		  		rx, ry, size.x, size.y,
-		  		0, 0, size.x, size.y
-		  	);
+	  		};
 		},
 
 		load : function(cb) {
@@ -91,7 +57,6 @@ define(function () {
 
 					that.tilesets = [];
 					var tilesets = map.getElementsByTagName("tileset");
-					var count = 0;
 					for (var i = 0; i < tilesets.length; i++) {
 						var tileset = tilesets[i]
 
@@ -114,10 +79,7 @@ define(function () {
 						};
 						that.tilesets[i].image.src = imgPath;
 						that.tilesets[i].image.onload = function() {	
-							count++;
-							if(count >= tilesets.length){
-								that.bake();
-							}
+							
 						};
 					};
 

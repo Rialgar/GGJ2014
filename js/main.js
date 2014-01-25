@@ -1,4 +1,4 @@
-require(['domReady', "Communicator", "Level", "Player"], function(domReady, Communicator, Level, Player) {
+require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(domReady, Communicator, Level, Player, Vector2D) {
 	domReady(function() {
 
 		var game = {};
@@ -28,6 +28,26 @@ require(['domReady', "Communicator", "Level", "Player"], function(domReady, Comm
 			game.renderer.setSize(window.innerWidth, window.innerHeight);
 		}
 
+		game.level = new Level("./maps/test01.tmx")
+		game.level.load(function(critters) {
+			game.critters = critters;
+
+			for (var i = 0; i < critters.length; i++) {
+				critters[i].game = game;
+			};
+
+			game.camera = new THREE.OrthographicCamera(-w / 2 / game.level.tileWidth, w / 2 / game.level.tileWidth, h / 2 / game.level.tileHeight, -h / 2 / game.level.tileHeight, -500, 1000);
+			game.scene.add(game.level.mesh);
+		});
+
+		game.scene.add(Player.instance.sprite.mesh);
+
+		Player.instance.game = game;
+
+		game.getRoundedPlayerPosition = function(){
+			return new Vector2D(Math.round(player.position.x), Math.round(player.position.y));
+		}
+
 		game.critters = [];
 		game.critterCollide = function(pos) {
 			var rx = Math.round(pos.x);
@@ -44,18 +64,6 @@ require(['domReady', "Communicator", "Level", "Player"], function(domReady, Comm
 			}
 			return false;
 		};
-
-		game.level = new Level("./maps/test01.tmx")
-		game.level.load(function(sprites) {
-			console.log("done");
-			game.critters = sprites;
-			game.camera = new THREE.OrthographicCamera(-w / 2 / game.level.tileWidth, w / 2 / game.level.tileWidth, h / 2 / game.level.tileHeight, -h / 2 / game.level.tileHeight, -500, 1000);
-			game.scene.add(game.level.mesh);
-		});
-
-		game.scene.add(Player.instance.sprite.mesh);
-
-		Player.instance.game = game;
 
 		game.buffer = new THREE.WebGLRenderTarget(w, h);
 

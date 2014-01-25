@@ -1,4 +1,4 @@
-define(function () {
+define(["Vector2D"], function (Vector2D) {
 	var Level = function Level(file) {
 		this.file = file;
 	};
@@ -6,7 +6,12 @@ define(function () {
 	Level.prototype = {
 		constructor : Level,
 
-		draw: function(ctx, size, offset) {
+		draw: function(ctx, size, playerPosition) {
+			if(!this.tileset) {
+				return;
+			}
+			var tmp = new Vector2D(size.x, size.y).scale(.5 / this.tileset.tileWidth);
+			var offset = playerPosition.copy().sub(tmp);
 			for (var x = 0; x < this.width; x++) {
 	  			for (var y = 0; y < this.height; y++) {
 	  				var tileset = this.tileset;

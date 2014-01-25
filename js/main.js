@@ -20,6 +20,7 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
   		var ctx = this.canvas.getContext("2d");
   		ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   		this.level.draw(ctx, {x:this.canvas.width, y:this.canvas.height}, Player.instance.position);
+  		Player.instance.draw(ctx);
   	}
 
 	var lastTime = null;

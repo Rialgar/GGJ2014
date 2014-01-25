@@ -36,6 +36,10 @@ define(["Keyboard", "Vector2D", "Communicator", "Gamepad"], function(Keyboard, V
 		}
 	};
 	
+	Player.prototype.draw = function(ctx) {
+		//TODO: implement
+	}
+	
 	Player.prototype.applyExternalMovement = function(moveDelta) {
 		this.keyboard.externalMovingVector = new Vector2D(moveDelta.x, moveDelta.y);
 		this.keyboard.update();

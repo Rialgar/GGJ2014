@@ -11,7 +11,7 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		
 		this.registerEventHandlers();
 		
-		this.level = null;
+		this.game = null;
 		
 		var that = this;
 
@@ -53,12 +53,12 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 	Player.prototype.moveColliding = function(movement) {
 		var dx = movement.x;
 		this.position.x += dx;
-		if(this.level.collides(this.position.x, this.position.y)) {
+		if(this.game.level.collides(this.position) || this.game.critterCollide(this.position)) {
 			this.position.x -= dx;
 		}
 		var dy = movement.y;
 		this.position.y += dy;
-		if(this.level.collides(this.position.x, this.position.y)) {
+		if(this.game.level.collides(this.position) || this.game.critterCollide(this.position)) {
 			this.position.y -= dy;
 		}
 		this.sprite.setPosition(this.position);

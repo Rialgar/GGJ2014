@@ -166,7 +166,7 @@ define(["Vector2D", "Sprite"], function (Vector2D, Sprite) {
 						//TODO: do something with objects.
 						var tileset = getTileset(gid);
 						var sprite = new Sprite(getGeometry(gid), tileset.material, tileset.tileWidth, tileset.tileHeight);
-						sprite.setPosition(new Vector2D(x/that.tileWidth, y/that.tileHeight - 1));
+						sprite.setPosition(new Vector2D(Math.round(x/that.tileWidth), Math.round(y/that.tileHeight)-1));
 						console.log(x,y);
 						sprites.push(sprite.mesh);
 					}
@@ -180,9 +180,9 @@ define(["Vector2D", "Sprite"], function (Vector2D, Sprite) {
 			req.send(null);
 		},
 		
-		collides: function(x,y) {
-			var cx = Math.round(x);
-			var cy = Math.round(y);
+		collides: function(pos) {
+			var cx = Math.round(pos.x);
+			var cy = Math.round(pos.y);
 			if(!this.tiles || !this.tiles[cx] || !this.tiles[cx][cy] || collisions.indexOf(this.tiles[cx][cy]) !== -1) {
 				return true;
 			}

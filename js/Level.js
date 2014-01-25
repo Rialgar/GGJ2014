@@ -1,24 +1,55 @@
 define(function () {
 	var Level = function Level(file) {
 		this.file = file;
+		this.background = document.createElement("canvas");
 	};
 
 	Level.prototype = {
 		constructor : Level,
 
-		draw: function(ctx, size, offset) {
+		bake: function(){
+			console.log("Backe Backe Kuchen!")
+			this.background.width = this.tileWidth * this.width;
+			this.background.height = this.tileHeight * this.height;
+			var ctx = this.background.getContext("2d");
+			ctx.clearRect(0, 0, this.background.width, this.background.height);
 			for (var x = 0; x < this.width; x++) {
 	  			for (var y = 0; y < this.height; y++) {
-	  				var tileset = this.tileset;
+	  				var tileset = this.tiles[x][y].tileset;
 
-	  				var rx = Math.round((x - offset.x) * tileset.tileWidth);
-	  				var ry = Math.round((y - offset.y) * tileset.tileHeight);
+	  				var rx = Math.round(x * this.tileWidth);
+	  				var ry = Math.round(y * this.tileHeight);
+	  				ry += this.tileHeight - tileset.tileHeight;
+
+  					var tile = this.tiles[x][y];
+	  				var tX = (tile.id-tileset.minId) % tileset.width;
+	  				var tY = (tile.id-tX-tileset.minId) / tileset.height;
+	  				tX *= tileset.tileWidth;
+	  				tY *= tileset.tileHeight
+	  				ctx.drawImage(tileset.image,
+	  					tX, tY, tileset.tileWidth, tileset.tileHeight,
+	  					rx, ry, tileset.tileWidth, tileset.tileHeight
+	  				);
+	  			};
+	  		};
+	  		console.log("Background ready");
+		},
+
+		draw: function(ctx, size, offset) {
+			/*for (var x = 0; x < this.width; x++) {
+	  			for (var y = 0; y < this.height; y++) {
+	  				var tileset = this.tiles[x][y].tileset;
+
+	  				var rx = Math.round((x - offset.x) * this.tileWidth);
+	  				var ry = Math.round((y - offset.y) * this.tileHeight);
+	  				ry += this.tileHeight - tileset.tileHeight;
+
 	  				if( rx > -tileset.tileWidth && rx < size.x + tileset.tileWidth &&
 	  					ry > -tileset.tileHeight && ry < size.y + tileset.tileHeight
 	  				){
 		  				var tile = this.tiles[x][y];
-		  				var tX = (tile-1) % tileset.width;
-		  				var tY = (tile-tX-1) / tileset.height;
+		  				var tX = (tile.id-tileset.minId) % tileset.width;
+		  				var tY = (tile.id-tX-tileset.minId) / tileset.height;
 		  				tX *= tileset.tileWidth;
 		  				tY *= tileset.tileHeight
 		  				ctx.drawImage(tileset.image,
@@ -27,7 +58,13 @@ define(function () {
 		  				);
 		  			}
 	  			};
-	  		};
+	  		};*/
+	  		var rx = Math.round(offset.x * this.tileWidth);
+	  		var ry = Math.round(offset.y * this.tileHeight);
+	  		ctx.drawImage(this.background,
+		  		rx, ry, size.x, size.y,
+		  		0, 0, size.x, size.y
+		  	);
 		},
 
 		load : function(cb) {
@@ -47,28 +84,50 @@ define(function () {
 					that.width = parseInt(map.getAttribute("width"));
 					that.height = parseInt(map.getAttribute("width"));
 
-					// find the tileset
-					var tileset = map.getElementsByTagName("tileset")[0];
-					var tileWidth = parseInt(tileset.getAttribute("tilewidth"));
-					var tileHeight = parseInt(tileset.getAttribute("tileheight"));
-					
-					var imageNode = tileset.childNodes[1];
-					var imageWidth = parseInt(imageNode.getAttribute("width"));
-					var imageHeight = parseInt(imageNode.getAttribute("height"));
-					var imgPath = imageNode.getAttribute("source");
-					imgPath = "./maps/" + imgPath;
+					that.tileWidth = parseInt(map.getAttribute("tilewidth"));
+					that.tileHeight = parseInt(map.getAttribute("tileheight"));
 
-					that.tileset = {
-						tileWidth: tileWidth,
-						tileHeight: tileHeight,		
-						width: imageWidth/tileWidth,
-						height: imageHeight/tileHeight,
-						image: new Image()
+					// find the tilesets
+
+					that.tilesets = [];
+					var tilesets = map.getElementsByTagName("tileset");
+					var count = 0;
+					for (var i = 0; i < tilesets.length; i++) {
+						var tileset = tilesets[i]
+
+						var tileWidth = parseInt(tileset.getAttribute("tilewidth"));
+						var tileHeight = parseInt(tileset.getAttribute("tileheight"));
+						
+						var imageNode = tileset.childNodes[1];
+						var imageWidth = parseInt(imageNode.getAttribute("width"));
+						var imageHeight = parseInt(imageNode.getAttribute("height"));
+						var imgPath = imageNode.getAttribute("source");
+						imgPath = "./maps/" + imgPath;
+
+						that.tilesets[i] = {
+							tileWidth: tileWidth,
+							tileHeight: tileHeight,		
+							width: imageWidth/tileWidth,
+							height: imageHeight/tileHeight,
+							minId: parseInt(tileset.getAttribute("firstgid")),
+							image: new Image()
+						};
+						that.tilesets[i].image.src = imgPath;
+						that.tilesets[i].image.onload = function() {	
+							count++;
+							if(count >= tilesets.length){
+								that.bake();
+							}
+						};
 					};
-					that.tileset.image.src = imgPath;
-					that.tileset.image.onload = function() {	
-						//TODO: do we need to do something here?
-					};
+
+					function getTileset(tileId){
+						for (var i = 0; i < that.tilesets.length; i++) {
+							if(i === that.tilesets.length-1 || that.tilesets[i+1].minId > tileId) {
+								return that.tilesets[i];
+							}
+						}
+					}
 
 					that.tiles = [];
 
@@ -84,12 +143,15 @@ define(function () {
 							that.tiles[x] = [];
 							for (var y = 0; y < layerHeight; y++) {
 								var tile = parseInt(tilesArray[layerWidth * y + x]);
-								that.tiles[x][y] = tile;
+								that.tiles[x][y] = {
+									id: tile,
+									tileset: getTileset(tile)
+								}
 							}
 						}
 					}
 					
-					// process the map data
+					// process the map objects
 					var objects = map.getElementsByTagName("object");
 					for (var i = 0; i < objects.length; i++) {
 						var object = objects[i];

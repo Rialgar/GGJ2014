@@ -5,8 +5,43 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
 
   	game.canvas = document.getElementById("canvas");
 
+  	game.ratio = game.canvas.width/game.canvas.height;
+
+  	game.camera = new THREE.OrthographicCamera(
+  		-960 / 32 / 16,
+  		 960 / 32 / 16,
+  		 540 / 32 / 16,
+  		-540 / 32 / 16,
+  		-500, 1000
+  	);
+
+  	game.camera.position.z = 100;
+  	game.camera.lookAt(new THREE.Vector3(0,0,0));
+
+  	game.scene = new THREE.Scene();
+
+  	/*var testMesh = new THREE.Mesh(
+  		new THREE.PlaneGeometry(20,20),
+  		new THREE.MeshBasicMaterial({color: 0xff00ff})
+  	);
+
+  	game.scene.add(testMesh);*/
+
+	game.renderer = new THREE.WebGLRenderer({
+		canvas: game.canvas
+	});
+	game.renderer.setSize(window.innerWidth, window.innerWidth/game.ratio);
+
+	function onWindowResize() {
+		game.renderer.setSize(window.innerWidth, window.innerHeight);
+
+	}
+
   	game.level = new Level("./maps/placeholder.tmx")
-  	game.level.load();
+  	game.level.load(function(){
+  		console.log("done");
+  		game.scene.add(game.level.mesh);
+  	});
   	
   	var stats = new Stats();
 	stats.domElement.style.position = 'absolute';
@@ -15,9 +50,8 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
 
 
   	game.draw = function(){
-  		var ctx = this.canvas.getContext("2d");
-  		ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  		this.level.draw(ctx, {x:this.canvas.width, y:this.canvas.height}, Player.instance.position);
+  		this.renderer.render(this.scene, this.camera);
+  		//this.level.draw(ctx, {x:this.canvas.width, y:this.canvas.height}, Player.instance.position);
   	}
 
 	var lastTime = null;

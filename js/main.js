@@ -35,7 +35,7 @@ require(['domReady', "Communicator", "Level", "Player"], function(domReady, Comm
 			for(var i = 0; i < critters.length; i++) {
 				var critter = critters[i];
 				if(critter) {
-					if(critter.position.x === rx && critter.position.y === ry) {
+					if(critter.position.x === rx && critter.position.y === -ry) {
 						console.log("colliding with critter");
 						return true;
 					}

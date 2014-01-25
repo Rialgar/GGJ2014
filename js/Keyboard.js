@@ -14,7 +14,9 @@ define(["Vector2D", "Communicator"], function(Vector2D, Communicator) {"use stri
 				that.update();
 				Communicator.instance.send({type: "moveChange", val: that.movingVector});
 			}
-			evt.preventDefault();
+			if(evt.keyCode >= 37 && evt.keyCode <= 40 || evt.keyCode >= 48 && evt.keyCode <= 90 || evt.keyCode === 32) {
+				evt.preventDefault();
+			}
 		}, false);
 		target.addEventListener("keyup", function(evt) {
 			if(that.keys[evt.keyCode] !== false) {
@@ -22,7 +24,9 @@ define(["Vector2D", "Communicator"], function(Vector2D, Communicator) {"use stri
 				that.update();
 				Communicator.instance.send({type: "moveChange", val: that.movingVector});
 			}
-			evt.preventDefault();
+			if(evt.keyCode >= 37 && evt.keyCode <= 40 || evt.keyCode >= 48 && evt.keyCode <= 90 || evt.keyCode === 32) {
+				evt.preventDefault();
+			}		
 		}, false);
 	};
 	Keyboard.prototype = {

@@ -4,7 +4,12 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		this.LP = 3;
 		this.keyboard = new Keyboard(document);
 		this.gamepad = new Gamepad(0);
+		this.movingVector = new Vector2D();
+		this.externalMovingVector = new Vector2D();
+		
 		this.speed = 3;
+		
+		this.registerEventHandlers();
 		
 		this.level = null;
 		
@@ -12,14 +17,32 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 
 		this.sprite = new Sprite("./maps/character.png", 95, 106, new Vector2D(46, 50), 3, {});
 		Communicator.instance.register(this, "moveChange", function(data) {
-			that.applyExternalMovement(data);
+			this.position.set(data.pos.x, data.pos.y);
+			that.applyExternalMovement(data.vec);
+		});
+	};
+	
+	Player.prototype.registerEventHandlers = function() {
+		this.keyboard.register(this, "moveChange", function(data) {
+			this.movingVector = data;
+			Communicator.instance.send({type: "moveChange", val: {
+				vec: data,
+				pos: this.position 
+			}});
+		});
+		this.gamepad.register(this, "moveChange", function(data) {
+			this.movingVector = data;
+			Communicator.instance.send({type: "moveChange", val: {
+				vec: data,
+				pos: this.position 
+			}});
 		});
 	};
 	
 	Player.prototype.update = function(delta) {
 		this.gamepad.update();
 		
-		var moving = this.gamepad.ownMovingVector.length() ? this.gamepad.movingVector : this.keyboard.movingVector;
+		var moving = this.movingVector.copy().add(this.externalMovingVector);
 		var scaledMoving = moving.multiplied(delta/1000*this.speed);
 		
 		this.moveColliding(scaledMoving);
@@ -44,8 +67,7 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 	}
 	
 	Player.prototype.applyExternalMovement = function(moveDelta) {
-		this.keyboard.externalMovingVector = new Vector2D(moveDelta.x, moveDelta.y);
-		this.keyboard.update();
+		this.externalMovingVector.set(moveDelta.x, moveDelta.y);
 	};
 	
 	Player.instance = new Player();

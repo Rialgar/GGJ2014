@@ -164,11 +164,12 @@ define(["Vector2D", "Sprite", "Enemy"], function (Vector2D, Sprite, Enemy) {
 						var y = parseInt(object.getAttribute("y"));
 						var gid = parseInt(object.getAttribute("gid"));
 						//TODO: do something with objects.
+						var type = object.parentNode.getAttribute("name");
 						var tileset = getTileset(gid);
-						var enemy = new Enemy(getGeometry(gid), tileset.material, tileset.tileWidth, tileset.tileHeight);
+						var enemy = new Enemy(getGeometry(gid), tileset.material, tileset.tileWidth, tileset.tileHeight, type);
 						enemy.setPosition(new Vector2D(Math.round(x/that.tileWidth), Math.round(y/that.tileHeight)-1));
 
-						that.mesh.add(enemy.sprite.mesh);
+						//that.mesh.add(enemy.sprite.mesh);
 
 						enemies.push(enemy);
 					}

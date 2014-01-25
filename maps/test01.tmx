@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="30" height="100" tilewidth="80" tileheight="80">
- <tileset firstgid="1" name="tileset" tilewidth="80" tileheight="80">
-  <image source="tileset.png" width="960" height="960"/>
+ <tileset firstgid="1" name="tilesetDUMMY2-2" tilewidth="80" tileheight="80">
+  <image source="tilesetDUMMY2.png" width="960" height="960"/>
  </tileset>
  <tileset firstgid="145" name="monster01" tilewidth="86" tileheight="104">
   <image source="monster01.png" width="86" height="104"/>
@@ -110,14 +110,16 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup name="Objektebene 1" width="30" height="100">
+ <objectgroup name="P0" width="30" height="100">
   <object gid="145" x="1755" y="2158"/>
   <object gid="145" x="1758" y="2642"/>
   <object gid="145" x="798" y="2241"/>
   <object gid="145" x="640" y="1921"/>
   <object gid="145" x="1118" y="959"/>
-  <object gid="145" x="719" y="642"/>
   <object gid="145" x="238" y="1840"/>
   <object gid="145" x="245" y="2801"/>
+ </objectgroup>
+ <objectgroup name="P1" width="30" height="100">
+  <object gid="145" x="719" y="646"/>
  </objectgroup>
 </map>

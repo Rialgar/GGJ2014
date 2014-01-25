@@ -2,6 +2,7 @@ define(["Emitter"], function(Emitter) {"use strict";
 	var Communicator = function Communicator() {
 		Emitter.call(this);
 		this.socket;
+		this.game;
 	};
 	
 	Communicator.prototype = Object.create(Emitter.prototype);
@@ -16,7 +17,7 @@ define(["Emitter"], function(Emitter) {"use strict";
 		});
 		
 		socket.on("init", function(data) {
-			console.log("You are player",data);
+			that.game.initialize(data);
 		});
 		
 		this.socket = socket;

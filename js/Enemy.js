@@ -2,8 +2,10 @@ define(["Sprite", "Vector2D"], function(Sprite, Vector2D){
 	var signum = function(x){
 		return x > 0 ? 1 : x < 0 ? -1 : 0;
 	}
-	var Enemy = function(geom, material, width, height){
+	var Enemy = function(geom, material, width, height, type){
 		this.sprite = new Sprite(geom, material, width, height);
+		this.type = type;
+		this.game = null;
 	};
 
 	Enemy.prototype = {

@@ -112,7 +112,7 @@ define(function () {
 		collides: function(x,y) {
 			var cx = Math.round(x);
 			var cy = Math.round(y);
-			if(!this.tiles || !this.tiles[cx] || !this.tiles[cx][cy]) {
+			if(!this.tiles || !this.tiles[cx] || !this.tiles[cx][cy] || [4].indexOf(this.tiles[cx][cy]) !== -1) {
 				return true;
 			}
 			return false;

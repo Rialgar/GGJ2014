@@ -45,7 +45,6 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 				var critter = game.critters[i];
 				if (critter) {
 					if (critter.getPosition().x === rx && critter.getPosition().y === ry) {
-						//TODO: damage the player or something
 						Player.instance.damage();
 						return true;
 					}
@@ -95,11 +94,10 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 		var delta = 1;
 		var now = 0;
 
-
 		var findConnectedCritter = function(critter) {
 			var critters = game.critters;
-			for(var i = 0; i < critters.length; i++) {
-				if(critters[i] !== critter && critters[i].getPosition().copy().sub(critter.getPosition()).lengthSq() === 0) {
+			for (var i = 0; i < critters.length; i++) {
+				if (critters[i] !== critter && critters[i].getPosition().copy().sub(critter.getPosition()).lengthSq() === 0) {
 					return critters[i];
 				}
 			}
@@ -112,32 +110,51 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 
 				for (var i = 0; i < critters.length; i++) {
 					critters[i].game = game;
-					console.log(critters[i].type, game.pID);
 					var otherCritter = findConnectedCritter(critters[i]);
 					if (critters[i].type === "P0" && game.pID === 0) {
 						game.level.mesh.add(critters[i].sprite.mesh);
-						if(otherCritter) {
-							critters.splice(critters.indexOf(otherCritter),1);
+						if (otherCritter) {
+							critters.splice(critters.indexOf(otherCritter), 1);
 							delete otherCritter;
 							i--;
 						}
 					} else if (critters[i].type === "P1" && game.pID === 1) {
 						game.level.mesh.add(critters[i].sprite.mesh);
-						if(otherCritter) {
-							critters.splice(critters.indexOf(otherCritter),1);
+						if (otherCritter) {
+							critters.splice(critters.indexOf(otherCritter), 1);
 							delete otherCritter;
 							i--;
 						}
 					}
-				};
+
+					critters[i].register(this, "land", function(data) {
+						if (game.critterCollide(Player.instance.position)) {
+							//wegpush
+							//TODO - check if you actually can go there
+							if(game.level.collides(Player.instance.position.copy().add(data.vec))) {
+								data.vec.scale(-1);
+							}
+							new TWEEN.Tween({
+								x : Player.instance.position.x,
+								y : Player.instance.position.y
+							}).to({
+								x : Player.instance.position.x + data.vec.x,
+								y : Player.instance.position.y + data.vec.y
+							}, 500).easing(TWEEN.Easing.Cubic.Out).onUpdate(function() {
+								Player.instance.position.x = this.x;
+								Player.instance.position.y = this.y;
+							}).start();
+						}
+					});
+				}
 
 				game.camera = new THREE.OrthographicCamera(-w / 2 / game.level.tileWidth, w / 2 / game.level.tileWidth, h / 2 / game.level.tileHeight, -h / 2 / game.level.tileHeight, -500, 1000);
 				game.scene.add(game.level.mesh);
-				
+
 				Communicator.instance.sendReady();
 			});
 		};
-		game.startGame = function(){
+		game.startGame = function() {
 			animate();
 			window.setInterval(function() {
 				now = new Date().valueOf();

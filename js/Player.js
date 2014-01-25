@@ -85,6 +85,13 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 
 	Player.prototype.doAttack = function(dir) {
 		this.sprite.setAnimation(dir);
+		switch(dir){
+			case "up": dir = new Vector2D(0,-1); break;
+			case "down": dir = new Vector2D(0,1); break;
+			case "left": dir = new Vector2D(-1,0); break;
+			case "right": dir = new Vector2D(1,0); break;
+		}
+		this.game.critterHit(this.position, dir);
 	}
 
 	Player.prototype.attack = function() {

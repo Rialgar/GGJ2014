@@ -43,7 +43,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 			var ry = Math.round(pos.y);
 			for (var i = 0; i < game.critters.length; i++) {
 				var critter = game.critters[i];
-				if (critter) {
+				if (critter && !critter.dead) {
 					if (critter.getPosition().x === rx && critter.getPosition().y === ry) {
 						if(game.pID === 0) {
 							Player.instance.damage(1);
@@ -57,7 +57,22 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 			return false;
 		};
 
-		game.buffer = new THREE.WebGLRenderTarget(w, h);
+		game.critterHit = function(pos, dir) {
+			for (var i = 0; i < game.critters.length; i++) {
+				var d = game.critters[i].getPosition().sub(dir.multiplied(0.5/dir.length()).add(pos));
+				if(d.lengthSq() <= 2){
+					//console.log(d.x*pos.x + d.y*pos.y);
+					//if(d.x*dir.x + d.y*dir.y > 0) {
+						game.critters[i].damage(dir);
+						return;
+					//}
+				}
+			}
+		}
+
+		game.buffer = new THREE.WebGLRenderTarget(w, h,{
+			minFilter: THREE.LinearFilter
+		});
 
 		game.fullScreenScene = new THREE.Scene();
 

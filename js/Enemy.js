@@ -2,11 +2,17 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 	var signum = function(x) {
 		return x > 0 ? 1 : x < 0 ? -1 : 0;
 	}
-	var Enemy = function(geom, material, width, height, type) {
+
+	var jumpTime = 800;
+
+	var Enemy = function(geom, material, deadMaterial, width, height, type, LP){
 		Emitter.call(this);
 		this.sprite = new Sprite(geom, material, width, height);
+		this.deadMaterial = deadMaterial;
+		this.deadMaterial.transparent = true;
 		this.type = type;
 		this.jumpingDirection = null;
+		this.LP = LP || 0;
 		this.id = 0;
 		this.game = null;
 		this.otherID = null;
@@ -31,6 +37,17 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 	Enemy.prototype.setPosition = function(pos) {
 		this.sprite.setPosition(pos);
 	};
+	Enemy.prototype.die = function(){
+			this.sprite.character.material = this.deadMaterial;
+			this.dead = true;
+		};
+
+	Enemy.prototype.damage = function(dir){
+			this.LP--;
+			if(this.LP < 0){
+				this.die();
+			}
+		};
 
 	Enemy.prototype.update = function(delta) {
 		if (this.target) {
@@ -46,15 +63,17 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 				var fr = this.from.copy();
 				var tg = this.target.copy();
 
-				fr.scale(this.animTime / 1000);
-				tg.scale(1 - this.animTime / 1000);
+				fr.scale(this.animTime / jumpTime);
+				tg.scale(1 - this.animTime / jumpTime);
 
 				tg.add(fr);
 				this.sprite.setPosition(tg);
 
-				this.sprite.setJumpHeight(1 - (this.animTime - 500) / 500 * (this.animTime - 500) / 500);
+				var d = (this.animTime - jumpTime/2) / (jumpTime/2);
+
+				this.sprite.setJumpHeight(1 -  d*d);
 			}
-		} else if (this.game) {
+		} else if (!this.dead && this.game) {
 			var dir = game.getRoundedPlayerPosition();
 			dir.sub(this.getPosition());
 
@@ -91,7 +110,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 			this.jumpingDirection = direction;
 
 
-			this.animTime = 1000;
+			this.animTime = jumpTime;
 		}
 	};
 

@@ -1,8 +1,4 @@
 define(["Vector2D", "Communicator"], function(Vector2D, Communicator) {"use strict";
-
-	console.log("Communicator");
-	console.log(Communicator);
-
 	var Keyboard = function(target) {
 		var that = this;
 		this.keys = [];
@@ -18,6 +14,7 @@ define(["Vector2D", "Communicator"], function(Vector2D, Communicator) {"use stri
 				that.update();
 				Communicator.instance.send({type: "moveChange", val: that.movingVector});
 			}
+			evt.preventDefault();
 		}, false);
 		target.addEventListener("keyup", function(evt) {
 			if(that.keys[evt.keyCode] !== false) {
@@ -25,6 +22,7 @@ define(["Vector2D", "Communicator"], function(Vector2D, Communicator) {"use stri
 				that.update();
 				Communicator.instance.send({type: "moveChange", val: that.movingVector});
 			}
+			evt.preventDefault();
 		}, false);
 	};
 	Keyboard.prototype = {
@@ -33,7 +31,6 @@ define(["Vector2D", "Communicator"], function(Vector2D, Communicator) {"use stri
 			this.movingVector.x = this.keys[Keyboard.KEY_D] + this.keys[Keyboard.KEY_RIGHT] - this.keys[Keyboard.KEY_A] - this.keys[Keyboard.KEY_LEFT] + this.externalMovingVector.x;
 			this.movingVector.y = this.keys[Keyboard.KEY_W] + this.keys[Keyboard.KEY_UP] - this.keys[Keyboard.KEY_S] - this.keys[Keyboard.KEY_DOWN] + this.externalMovingVector.y;
 			this.movingVector.normalize();
-			console.log(this.movingVector);
 		}
 	};
 	Keyboard.KEY_W = 87;

@@ -131,8 +131,8 @@ define(["Vector2D", "Sprite"], function (Vector2D, Sprite) {
 								var tile = parseInt(tilesArray[layerWidth * y + x]);
 								var tileset = getTileset(tile);
 
-								var rx = x - 0.5;
-				  				var ry = y - 0.5;
+								var rx = x;
+				  				var ry = y;
 				  				ry += (that.tileHeight - tileset.tileHeight)/that.tileHeight;
 
 				  				var tX = (tile-tileset.minId) % tileset.width;

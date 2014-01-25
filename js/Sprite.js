@@ -2,6 +2,7 @@ define(["Vector2D"], function(Vector2D) {
 	var tileSize = 80;
 
 	var Sprite = function(filename, width, height, mid, layer, animations) {
+		this.mesh = new THREE.Mesh();
 		if ( typeof filename === "string") {
 			this.texture = THREE.ImageUtils.loadTexture(filename);
 			this.material = new THREE.MeshBasicMaterial({
@@ -16,10 +17,11 @@ define(["Vector2D"], function(Vector2D) {
 			this.animations = animations;
 
 			this.geometry = new THREE.PlaneGeometry(this.width, this.height);
-			this.mesh = new THREE.Mesh(this.geometry, this.material);
-			this.mesh.position.x = -this.mid.x;
-			this.mesh.position.y = this.mid.y;
-			this.mesh.position.z = layer;
+			this.character = new THREE.Mesh(this.geometry, this.material);
+			this.character.position.set(-this.mid.x, this.mid.y, layer);
+			this.character.position.z = layer;
+
+			this.mesh.add(this.character);
 		} else {
 			var geom = arguments[0];
 			var material = arguments[1];
@@ -27,20 +29,27 @@ define(["Vector2D"], function(Vector2D) {
 			var height = arguments[3];
 			this.width = width / tileSize;
 			this.height = height / tileSize;
-			this.mid = new Vector2D(46, 50).scale(1 / tileSize);
+			this.mid = new Vector2D(0, 10).scale(1 / tileSize);
 			this.animations = {};
 			material.transparent = true;
-			this.mesh = new THREE.Mesh(geom, material);
-			this.mesh.position.set(-this.mid.x, this.mid.y, 2);
+			this.character = new THREE.Mesh(geom, material);
+			this.character.position.set(-this.mid.x, this.mid.y, 3);
+			this.character.position.z = 3;
+			this.mesh.add(this.character);
 		}
+		this.shadow = new THREE.Mesh(
+			new THREE.PlaneGeometry(0.8, 0.75),
+			new THREE.MeshBasicMaterial({color: 0xffffff, map: THREE.ImageUtils.loadTexture("./maps/shadow.png"), transparent: true})
+		);
+		this.mesh.add(this.shadow)
 	};
 
 	Sprite.prototype = {
 		constructor : Sprite,
 
 		setPosition : function(pos) {
-			this.mesh.position.x = pos.x - this.mid.x;
-			this.mesh.position.y = -(pos.y - this.mid.y);
+			this.mesh.position.x = pos.x;
+			this.mesh.position.y = -pos.y;
 		}
 	};
 

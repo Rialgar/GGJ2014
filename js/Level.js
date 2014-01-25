@@ -1,4 +1,4 @@
-define(["Vector2D"], function (Vector2D) {
+define(["Vector2D", "Sprite"], function (Vector2D, Sprite) {
 	var Level = function Level(file) {
 		this.file = file;
 		this.background = document.createElement("canvas");
@@ -154,18 +154,24 @@ define(["Vector2D"], function (Vector2D) {
 					that.mesh = new THREE.Mesh( that.geom, that.tilesets[0].material);
 
 					// process the map objects
+					var sprites = [];
+					
 					var objects = map.getElementsByTagName("object");
 					for (var i = 0; i < objects.length; i++) {
 						var object = objects[i];
-						var x = parseInt(object.getAttribute("x")) / 32;
-						var y = -parseInt(object.getAttribute("y")) / 32;
-						
+						var x = parseInt(object.getAttribute("x"));
+						var y = parseInt(object.getAttribute("y"));
+						var gid = parseInt(object.getAttribute("gid"));
 						//TODO: do something with objects.
+						var tileset = getTileset(gid);
+						var sprite = new Sprite(getGeometry(gid), tileset.material, tileset.tileWidth, tileset.tileHeight);
+						sprite.setPosition(new Vector2D(x/that.tileWidth, y/that.tileHeight));
+						console.log(x,y);
+						sprites.push(sprite.mesh);
 					}
-
 					if(typeof cb === "function")
 					{
-						cb();
+						cb(sprites);
 					}
 				}
 			}

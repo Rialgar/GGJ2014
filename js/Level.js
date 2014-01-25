@@ -1,4 +1,4 @@
-define(["Vector2D"], function (Vector2D) {
+define(["Vector2D", "Sprite"], function (Vector2D, Sprite) {
 	var collisions = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20,21,22,24,29,30,31,33,34,36,37,38,45,46,47,48,56,57,60];
 	var Level = function Level(file) {
 		this.file = file;
@@ -155,18 +155,24 @@ define(["Vector2D"], function (Vector2D) {
 					that.mesh = new THREE.Mesh( that.geom, that.tilesets[0].material);
 
 					// process the map objects
+					var sprites = [];
+					
 					var objects = map.getElementsByTagName("object");
 					for (var i = 0; i < objects.length; i++) {
 						var object = objects[i];
-						var x = parseInt(object.getAttribute("x")) / 32;
-						var y = -parseInt(object.getAttribute("y")) / 32;
-						
+						var x = parseInt(object.getAttribute("x"));
+						var y = parseInt(object.getAttribute("y"));
+						var gid = parseInt(object.getAttribute("gid"));
 						//TODO: do something with objects.
+						var tileset = getTileset(gid);
+						var sprite = new Sprite(getGeometry(gid), tileset.material, tileset.tileWidth, tileset.tileHeight);
+						sprite.setPosition(new Vector2D(x/that.tileWidth, y/that.tileHeight));
+						console.log(x,y);
+						sprites.push(sprite.mesh);
 					}
-
 					if(typeof cb === "function")
 					{
-						cb();
+						cb(sprites);
 					}
 				}
 			}

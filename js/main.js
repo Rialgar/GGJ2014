@@ -8,6 +8,8 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
   	game.level = new Level("./maps/placeholder.tmx")
   	game.level.load();
   	
+  	Player.instance.level = game.level;
+  	
   	var stats = new Stats();
 	stats.domElement.style.position = 'absolute';
 	stats.domElement.style.top = '0px';

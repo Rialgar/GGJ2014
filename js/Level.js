@@ -107,6 +107,15 @@ define(function () {
 			}
 
 			req.send(null);
+		},
+		
+		collides: function(x,y) {
+			var cx = Math.round(x);
+			var cy = Math.round(y);
+			if(!this.tiles || !this.tiles[cx] || !this.tiles[cx][cy]) {
+				return true;
+			}
+			return false;
 		}
 	}
 	

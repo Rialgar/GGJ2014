@@ -1,7 +1,10 @@
 define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(Keyboard, Vector2D, Sprite, Communicator, Gamepad) {"use strict";
 	var Player = function Player() {
 		this.position = new Vector2D(8,5);
+		
 		this.LP = 3;
+		this.invincible = false;
+		
 		this.keyboard = new Keyboard(document);
 		this.gamepad = new Gamepad(0);
 		this.movingVector = new Vector2D();
@@ -40,6 +43,18 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 			}});
 		});
 	};
+	
+	Player.prototype.damage = function() {
+		if(!this.invincible) {
+			console.log("I AM VERY HURT");
+			this.LP--;
+			this.invincible = true;
+			var that = this;
+			window.setTimeout(function() {
+				that.invincible = false;
+			}, 2000);
+		}
+	}
 	
 	Player.prototype.update = function(delta) {
 		this.gamepad.update();

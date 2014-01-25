@@ -37,6 +37,7 @@ require(['domReady', "Communicator", "Level", "Player"], function(domReady, Comm
 				if(critter) {
 					if(critter.position.x === rx && critter.position.y === -ry) {
 						//TODO: damage the player or something
+						Player.instance.damage();
 						return true;
 					}
 				}

@@ -20,11 +20,19 @@ define(["Emitter"], function(Emitter) {"use strict";
 			that.game.initialize(data);
 		});
 		
+		socket.on("go", function() {
+			that.game.startGame();
+		});
+		
 		this.socket = socket;
 	};
 	
 	Communicator.prototype.send = function(data) {
 	  	this.socket.emit("data", data);
+	};
+	
+	Communicator.prototype.sendReady = function() {
+		this.socket.emit("ready");
 	};
 	
 	Communicator.instance = new Communicator();

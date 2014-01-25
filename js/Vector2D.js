@@ -30,12 +30,22 @@ define(function() {"use strict";
 		multiplied : function(factor) {
 			return new Vector2D(this.x * factor, this.y * factor);
 		},
+		scale : function(scalar) {
+			this.x *= scalar;
+			this.y *= scalar;
+			return this;
+		},
 		copy : function() {
 			return new Vector2D(this.x, this.y);
 		},
 		add : function(vector) {
 			this.x += vector.x;
 			this.y += vector.y;
+			return this;
+		},
+		sub : function(vector) {
+			this.x -= vector.x;
+			this.y -= vector.y;
 			return this;
 		},
 		angle : function() {

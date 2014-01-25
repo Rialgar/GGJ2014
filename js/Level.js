@@ -1,4 +1,4 @@
-define(function () {
+define(["Vector2D"], function (Vector2D) {
 	var Level = function Level(file) {
 		this.file = file;
 		this.background = document.createElement("canvas");
@@ -6,32 +6,6 @@ define(function () {
 
 	Level.prototype = {
 		constructor : Level,
-
-		/*draw: function(ctx, size, offset) {
-			for (var x = 0; x < this.width; x++) {
-	  			for (var y = 0; y < this.height; y++) {
-	  				var tileset = this.tiles[x][y].tileset;
-
-	  				var rx = Math.round((x - offset.x) * this.tileWidth);
-	  				var ry = Math.round((y - offset.y) * this.tileHeight);
-	  				ry += this.tileHeight - tileset.tileHeight;
-
-	  				if( rx > -tileset.tileWidth && rx < size.x + tileset.tileWidth &&
-	  					ry > -tileset.tileHeight && ry < size.y + tileset.tileHeight
-	  				){
-		  				var tile = this.tiles[x][y];
-		  				var tX = (tile.id-tileset.minId) % tileset.width;
-		  				var tY = (tile.id-tX-tileset.minId) / tileset.height;
-		  				tX *= tileset.tileWidth;
-		  				tY *= tileset.tileHeight
-		  				ctx.drawImage(tileset.image,
-		  					tX, tY, tileset.tileWidth, tileset.tileHeight,
-		  					rx, ry, tileset.tileWidth, tileset.tileHeight
-		  				);
-		  			}
-	  			};
-	  		};
-		},*/
 
 		load : function(cb) {
 			var req = new XMLHttpRequest();
@@ -197,6 +171,15 @@ define(function () {
 			}
 
 			req.send(null);
+		},
+		
+		collides: function(x,y) {
+			var cx = Math.round(x);
+			var cy = Math.round(y);
+			if(!this.tiles || !this.tiles[cx] || !this.tiles[cx][cy] || [4].indexOf(this.tiles[cx][cy]) !== -1) {
+				return true;
+			}
+			return false;
 		}
 	}
 	

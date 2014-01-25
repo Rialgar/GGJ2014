@@ -42,6 +42,8 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
   		game.scene.add(game.level.mesh);
   	});
   	
+  	Player.instance.level = game.level;
+  	
   	var stats = new Stats();
 	stats.domElement.style.position = 'absolute';
 	stats.domElement.style.top = '0px';
@@ -53,6 +55,7 @@ require(['domReady', "Communicator", "Level", "Player"], function (domReady, Com
   		this.camera.position.y = -Player.instance.position.y;
   		this.renderer.render(this.scene, this.camera);
   		//this.level.draw(ctx, {x:this.canvas.width, y:this.canvas.height}, Player.instance.position);
+  		//Player.instance.draw(ctx);
   	}
 
 	var lastTime = null;

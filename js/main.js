@@ -47,7 +47,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 					if (critter.getPosition().x === rx && critter.getPosition().y === ry) {
 						if(game.pID === 0) {
 							Player.instance.damage(1);
-							Communicator.instance.send({type: "damage", val: 1});
+							Communicator.instance.send({type: "damage", val: Player.instance.LP});
 						}
 						
 						return true;

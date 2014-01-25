@@ -34,9 +34,10 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		});
 		Communicator.instance.register(this, "attack", function(dir) {
 			this.doAttack(dir);
-		})
+		});
 		Communicator.instance.register(this, "damage", function(data) {
-			this.damage(data);
+			this.LP = data+1;
+			this.damage();
 		});
 	};
 

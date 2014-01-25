@@ -7,18 +7,12 @@ require(['domReady', "Communicator", "Level", "Player"], function(domReady, Comm
 
 		game.ratio = game.canvas.width / game.canvas.height;
 
-  	var w = 1920;
-  	//var w = 1600;
-  	var h = 1080;
-  	//var h = 900;
+		var w = 1920;
+		//var w = 1600;
+		var h = 1080;
+		//var h = 900;
 
-  	game.camera = new THREE.OrthographicCamera(
-  		-w / 2 / 32,
-  		 w / 2 / 32,
-  		 h / 2 / 32,
-  		-h / 2 / 32,
-  		-500, 1000
-  	);
+		game.camera = new THREE.OrthographicCamera(-w / 2 / 32, w / 2 / 32, h / 2 / 32, -h / 2 / 32, -500, 1000);
 
 		game.camera.position.z = 100;
 		game.camera.lookAt(new THREE.Vector3(0, 0, 0));
@@ -34,52 +28,33 @@ require(['domReady', "Communicator", "Level", "Player"], function(domReady, Comm
 			game.renderer.setSize(window.innerWidth, window.innerHeight);
 		}
 
-  	game.level = new Level("./maps/test01.tmx")
-  	game.level.load(function(sprites){
-  		console.log("done");
-  		game.camera = new THREE.OrthographicCamera(
-  		-w / 2 / game.level.tileWidth,
-  		 w / 2 / game.level.tileWidth,
-  		 h / 2 / game.level.tileHeight,
-  		-h / 2 / game.level.tileHeight,
-  		-500, 1000
-  	);
-			for(var i = 0; i < sprites.length; i++) {
+
+		game.level = new Level("./maps/test01.tmx")
+		game.level.load(function(sprites) {
+			console.log("done");
+			game.camera = new THREE.OrthographicCamera(-w / 2 / game.level.tileWidth, w / 2 / game.level.tileWidth, h / 2 / game.level.tileHeight, -h / 2 / game.level.tileHeight, -500, 1000);
+			for (var i = 0; i < sprites.length; i++) {
 				game.scene.add(sprites[i]);
 			}
-  		game.scene.add(game.level.mesh);
-  	});
-  	
-  	game.scene.add(Player.instance.sprite.mesh);
+			game.scene.add(game.level.mesh);
+		});
 
-  	Player.instance.level = game.level;
-  	
-	game.buffer = new THREE.WebGLRenderTarget(w, h);
+		game.scene.add(Player.instance.sprite.mesh);
 
-	game.fullScreenScene = new THREE.Scene();
+		Player.instance.level = game.level;
 
-  	game.fullScreenMesh = new THREE.Mesh(
-  		new THREE.PlaneGeometry(w,h),
-  		new THREE.MeshBasicMaterial({color: 0xffffff, map:game.buffer})
-  	);
+		game.buffer = new THREE.WebGLRenderTarget(w, h);
 
-  	game.fullScreenScene.add(game.fullScreenMesh);
+		game.fullScreenScene = new THREE.Scene();
 
-	game.fullScreenCamera = new THREE.OrthographicCamera(
-  		-w/2, w/2, h/2, -h/2, -500, 1000
-  	);
+		game.fullScreenMesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({
+			color : 0xffffff,
+			map : game.buffer
+		}));
 
-  	var stats = new Stats();
-	stats.domElement.style.position = 'absolute';
-	stats.domElement.style.top = '0px';
-	document.body.appendChild(stats.domElement);
+		game.fullScreenScene.add(game.fullScreenMesh);
 
-  	game.draw = function(){
-  		this.camera.position.x = Math.round(Player.instance.position.x * this.level.tileWidth) / this.level.tileWidth;
-  		this.camera.position.y = -Math.round(Player.instance.position.y * this.level.tileHeight) / this.level.tileHeight;
-  		this.renderer.render(this.scene, this.camera, this.buffer);
-  		this.renderer.render(this.fullScreenScene, this.fullScreenCamera);
-  	}
+		game.fullScreenCamera = new THREE.OrthographicCamera(-w / 2, w / 2, h / 2, -h / 2, -500, 1000);
 
 		var stats = new Stats();
 		stats.domElement.style.position = 'absolute';
@@ -87,12 +62,16 @@ require(['domReady', "Communicator", "Level", "Player"], function(domReady, Comm
 		document.body.appendChild(stats.domElement);
 
 		game.draw = function() {
-			this.camera.position.x = Player.instance.position.x;
-			this.camera.position.y = -Player.instance.position.y;
-			this.renderer.render(this.scene, this.camera);
-			//this.level.draw(ctx, {x:this.canvas.width, y:this.canvas.height}, Player.instance.position);
-			//Player.instance.draw(ctx);
+			this.camera.position.x = Math.round(Player.instance.position.x * this.level.tileWidth) / this.level.tileWidth;
+			this.camera.position.y = -Math.round(Player.instance.position.y * this.level.tileHeight) / this.level.tileHeight;
+			this.renderer.render(this.scene, this.camera, this.buffer);
+			this.renderer.render(this.fullScreenScene, this.fullScreenCamera);
 		}
+		var stats = new Stats();
+		stats.domElement.style.position = 'absolute';
+		stats.domElement.style.top = '0px';
+		document.body.appendChild(stats.domElement);
+
 		var lastTime = null;
 		var animate = function(timeStamp) {
 			window.requestAnimationFrame(animate);
@@ -116,4 +95,4 @@ require(['domReady', "Communicator", "Level", "Player"], function(domReady, Comm
 		window.game = game;
 		window.player = Player.instance;
 	});
-}); 
+});

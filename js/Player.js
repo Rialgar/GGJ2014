@@ -64,9 +64,9 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		while (el.firstChild) {
 			el.removeChild(el.firstChild);
 		}
-		for (var i = 0; i < this.LP; i++) {
+		for (var i = 0; i <= this.LP; i++) {
 			var im = document.createElement("img");
-			im.setAttribute("src", "./maps/character.png");
+			im.setAttribute("src", "./maps/HP.png");
 			el.appendChild(im);
 		}
 	};

@@ -29,10 +29,11 @@ define(["Vector2D"], function(Vector2D) {
 
 			this.mesh.add(this.character);
 		} else {
-			var geom = arguments[0];
+			var geom = arguments[0].clone();
 			var material = arguments[1];
 			var width = arguments[2];
 			var height = arguments[3];
+			this.geometry = geom;
 			this.width = width / tileSize;
 			this.height = height / tileSize;
 			this.mid = new Vector2D(0, 10).scale(1 / tileSize);

@@ -1,6 +1,6 @@
 define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(Keyboard, Vector2D, Sprite, Communicator, Gamepad) {"use strict";
 	var Player = function Player() {
-		this.position = new Vector2D(27, 198);
+		this.position = new Vector2D(31, 109);
 
 		this.LP = 2;
 		this.invincible = false;

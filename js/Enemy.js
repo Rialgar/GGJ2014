@@ -50,7 +50,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 	var icongeometry = new THREE.PlaneGeometry(48/80,48/80);
 	var iconMaterials = {
 		heart: new THREE.MeshBasicMaterial({color:0xffffff, map:THREE.ImageUtils.loadTexture("./maps/hearticon.png")}),
-		frownmie: new THREE.MeshBasicMaterial({color:0xffffff, map:THREE.ImageUtils.loadTexture("./maps/frownieicon.png")})
+		frownie: new THREE.MeshBasicMaterial({color:0xffffff, map:THREE.ImageUtils.loadTexture("./maps/frownieicon.png")})
 	};
 	Enemy.icons = [];
 	for (var i = 0; i < 20; i++) {
@@ -121,6 +121,9 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 
 	Enemy.prototype.die = function(){
 		this.sprite.character.material = deadMaterial;
+		if(this.good){
+			Enemy.spawnFrownie(this.getPosition());
+		}
 		this.dead = true;
 	};
 

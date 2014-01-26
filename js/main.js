@@ -123,6 +123,9 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 			}
 		}
 		game.initialize = function(id) {
+			// remove the waiting for players tag
+			document.getElementById("notification").textContent = "starting game...";
+			
 			game.pID = id;
 			game.level = new Level("./maps/big_map.tmx")
 			game.level.load(function(critters) {
@@ -181,6 +184,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 			});
 		};
 		game.startGame = function() {
+			document.getElementById("notification").textContent = "";
 			animate();
 			window.setInterval(function() {
 				now = new Date().valueOf();

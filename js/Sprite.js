@@ -1,6 +1,10 @@
 define(["Vector2D"], function(Vector2D) {
 	var tileSize = 80;
 
+	var signum = function(x) {
+		return x > 0 ? 1 : x < 0 ? -1 : 0;
+	}
+
 	var Sprite = function(filename, width, height, rows, collumns, mid, layer, animations) {
 		this.mesh = new THREE.Mesh();
 		if ( typeof filename === "string") {
@@ -40,7 +44,7 @@ define(["Vector2D"], function(Vector2D) {
 			this.mesh.add(this.character);
 		}
 		this.shadow = new THREE.Mesh(
-			new THREE.PlaneGeometry(88/80, 88/80),
+			new THREE.PlaneGeometry(65/tileSize, 60/tileSize),
 			new THREE.MeshBasicMaterial({color: 0xffffff, map: THREE.ImageUtils.loadTexture("./maps/shadow.png"), transparent: true})
 		);
 		this.shadow.position.z = 2;
@@ -61,6 +65,12 @@ define(["Vector2D"], function(Vector2D) {
 
 		setJumpHeight : function(height) {
 			this.character.position.y = this.mid.y+height;
+			for(var i = 0; i < 4; i++)
+			{
+				this.shadow.geometry.vertices[i].x = signum(this.shadow.geometry.vertices[i].x) * 65/tileSize/2 * ((1-height)/4+0.75);
+				this.shadow.geometry.vertices[i].y = signum(this.shadow.geometry.vertices[i].y) * 60/tileSize/2 * ((1-height)/4+0.75);
+			}
+			this.shadow.geometry.verticesNeedUpdate = true;
 		},
 
 		setUV: function(x0, x1, y0, y1){

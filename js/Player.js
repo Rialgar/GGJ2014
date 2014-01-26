@@ -19,12 +19,13 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 
 		var that = this;
 		
-		this.sprite = new Sprite("./maps/kastanieSheet.png", 128, 128, 1, 5, new Vector2D(0, 0), 4, {
+		this.sprite = new Sprite("./maps/kastanieSheet.png", 128, 128, 1, 6, new Vector2D(0, 0), 4, {
 			"idle": [{x:0, y:0, time:1000}],
 			"up": [{x:1, y:0, time:600}],
 			"down": [{x:2, y:0, time:600}],
 			"left": [{x:3, y:0, time:600}],
-			"right": [{x:4, y:0, time:600}]
+			"right": [{x:4, y:0, time:600}],
+			"hit": [{x:5, y:0, time:600}]
 		});
 		this.sprite.setPosition(this.position);
 		
@@ -168,6 +169,7 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 				this.die();
 				return;
 			}
+			this.sprite.setAnimation("hit");
 			var that = this;
 			window.setTimeout(function() {
 				that.invincible = false;

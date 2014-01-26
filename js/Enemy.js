@@ -3,7 +3,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		return x > 0 ? 1 : x < 0 ? -1 : 0;
 	}
 
-	var relations = [[146, 147],[148, 149]]; //[good, bad]
+	var relations = [[145, 146], [147, 148], [149, 150], [151, 152]]; //[good, bad]
 
 	var isGood = function(id){
 		for (var i = 0; i < relations.length; i++) {
@@ -19,11 +19,21 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		new THREE.MeshBasicMaterial({color: 0xffffff, map: THREE.ImageUtils.loadTexture("./maps/spross.png"), transparent: true})
 	];
 
-	var setMeshToDead = function(mesh, good){
-		mesh.material = deadMaterials[good ? 0 : 1];
+	var setSpriteToDead = function(sprite, good){
+		sprite.character.material = deadMaterials[good ? 0 : 1];
+		sprite.setUV(0,1,0,1);
 	}
 
-	var vanishingPoints = [{x:31, y:204}];
+	var vanishingPoints = [
+		{x:26, y:95}, {x:24, y:103}, {x:28, y:109}, {x:37, y:103}, {x:42, y:102},
+		{x:48, y:100}, {x:54, y:106}, {x:73, y:107}, {x:66, y:102}, {x:67, y:97},
+		{x:75, y:109}, {x:82, y:103}, {x:86, y:95}, {x:77, y:97}, {x:77, y:86},
+		{x:77, y:77}, {x:71, y:69}, {x:69, y:57}, {x:80, y:64}, {x:57, y:75},
+		{x:69, y:50}, {x:68, y:50}, {x:70, y:42}, {x:74, y:43}, {x:78, y:35},
+		{x:77, y:34}, {x:80, y:23}, {x:74, y:18}, {x:60, y:20}, {x:48, y:10},
+		{x:40, y:14}, {x:39, y:21}, {x:50, y:23}, {x:50, y:33}, {x:41, y:35},
+		{x:51, y:42}, {x:55, y:49}, {x:56, y:60}
+	];
 
 	var jumpTime = 800;
 
@@ -127,7 +137,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 	};
 
 	Enemy.prototype.die = function(){
-		setMeshToDead(this.sprite.character, this.good);
+		setSpriteToDead(this.sprite, this.good);
 		if(this.good){
 			Enemy.spawnFrownie(this.getPosition());
 			this.emit("slaughtered");

@@ -18,7 +18,7 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		this.game = null;
 
 		var that = this;
-
+		
 		this.sprite = new Sprite("./maps/kastanieSheet.png", 128, 128, 1, 5, new Vector2D(0, 0), 4, {
 			"idle": [{x:0, y:0, time:1000}],
 			"up": [{x:1, y:0, time:600}],
@@ -27,6 +27,24 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 			"right": [{x:4, y:0, time:600}]
 		});
 		this.sprite.setPosition(this.position);
+		
+		var texture = THREE.ImageUtils.loadTexture("./maps/pfeil.png");
+		this.material = new THREE.MeshBasicMaterial({
+			color : 0xffffff,
+			map : texture,
+			transparent : true
+		});
+		this.arrow = new THREE.Mesh();
+		var arrowMesh = new THREE.Mesh(new THREE.PlaneGeometry(.3, .3), this.material);
+
+		this.arrow.add(arrowMesh);
+		arrowMesh.position.set(0,.7,0);
+		
+		this.arrow.position.set(0,0,8);
+		this.sprite.mesh.add(this.arrow);
+		
+		window.arrow = this.arrow;		
+		
 		Communicator.instance.register(this, "moveChange", function(data) {
 			this.position.set(data.pos.x, data.pos.y);
 			that.applyExternalMovement(data.vec);
@@ -161,6 +179,8 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		var scaledMoving = moving.multiplied(delta / 1000 * this.speed);
 
 		this.moveColliding(scaledMoving);
+		
+		this.arrow.rotation.z = moving.angle() + Math.PI / 2;
 
 		this.sprite.update(delta);
 	};

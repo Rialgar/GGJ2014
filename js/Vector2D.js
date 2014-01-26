@@ -49,7 +49,7 @@ define(function() {"use strict";
 			return this;
 		},
 		angle : function() {
-			return Math.atan2(this.y, this.x);
+			return Math.atan2(this.y, -this.x);
 		}
 	};
 	return Vector2D;

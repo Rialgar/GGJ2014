@@ -81,6 +81,19 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 				}
 			}
 		}
+		
+		this.screenShaking = 0;
+		game.shakeScreen = function(amount) {
+			this.screenShaking = amount;
+			var that = this;
+			new TWEEN.Tween({
+				val : amount,
+			}).to({
+				val : 0
+			}, 800).easing(TWEEN.Easing.Quadratic.Out).onUpdate(function() {
+				that.screenShaking = this.val;
+			}).start();
+		};
 
 		Enemy.icons.forEach(function(ea){
 			game.scene.add(ea);
@@ -106,11 +119,32 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 		stats.domElement.style.top = '0px';
 		document.body.appendChild(stats.domElement);
 
+		var ss = {
+			x : 0,
+			y : 0,
+			z : 0
+		};
 		game.draw = function() {
 			this.camera.position.x = Math.round(Player.instance.position.x * this.level.tileWidth) / this.level.tileWidth;
 			this.camera.position.y = -Math.round(Player.instance.position.y * this.level.tileHeight) / this.level.tileHeight;
+			
+			if (this.screenShaking > 0) {
+				ss.x = Math.random() * this.screenShaking - this.screenShaking / 2;
+				ss.y = Math.random() * this.screenShaking - this.screenShaking / 2;
+				ss.z = Math.random() * this.screenShaking - this.screenShaking / 2;
+				this.camera.position.x += ss.x;
+				this.camera.position.y += ss.y;
+				this.camera.position.z += ss.z;
+			}
 			this.renderer.render(this.scene, this.camera, this.buffer);
 			this.renderer.render(this.fullScreenScene, this.fullScreenCamera);
+			
+			if (this.screenShaking > 0) {
+				this.camera.position.x -= ss.x;
+				this.camera.position.y -= ss.y;
+				this.camera.position.z -= ss.z;
+			}
+
 		}
 		var stats = new Stats();
 		stats.domElement.style.position = 'absolute';

@@ -37,7 +37,12 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 				that.jump(new Vector2D(data.vec.x,data.vec.y).sub(this.getPosition()));
 			}
 		});
-		
+		Communicator.instance.register(this, "free", function(id) {
+			if(id === that.id || id === that.otherID) {
+				// process the jump data
+				that.free();
+			}
+		});
 	};
 
 	var heartgeometry = new THREE.PlaneGeometry(48/80,48/80);

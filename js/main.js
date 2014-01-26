@@ -158,6 +158,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 						game.level.mesh.add(critters[i].sprite.mesh);
 						if (otherCritter) {
 							critters.splice(critters.indexOf(otherCritter), 1);
+							critters[i].good &= otherCritter.good;
 							delete otherCritter;
 							i--;
 							continue;
@@ -166,6 +167,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 						game.level.mesh.add(critters[i].sprite.mesh);
 						if (otherCritter) {
 							critters[i].otherID = otherCritter.id;
+							critters[i].good &= otherCritter.good;
 							critters.splice(critters.indexOf(otherCritter), 1);
 							delete otherCritter;
 							i--;

@@ -27,7 +27,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		this.gid = gid;
 		this.good = isGood(gid);
 		this.jumpingDirection = null;
-		this.LP = this.good ? 0 : 1;
+		this.LP = 1;
 		this.id = 0;
 		this.game = null;
 		this.otherID = null;
@@ -112,9 +112,10 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		this.dead = true;
 	};
 
+
 	Enemy.prototype.damage = function(dir){
 		this.LP--;
-		if(this.LP < 0){
+		if(this.good || this.LP < 0){
 			this.die();
 		}
 		this.pushDir = dir.copy().normalize().scale(15);

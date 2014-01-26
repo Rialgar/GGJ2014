@@ -14,6 +14,8 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		return false;
 	}
 
+	var vanishingPoints = [{x:31, y:204}];
+
 	var jumpTime = 800;
 
 	var Enemy = function(geom, material, deadMaterial, width, height, type, gid){
@@ -61,7 +63,6 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 				Enemy.hearts[i].active -= delta;
 				Enemy.hearts[i].position.y += delta/1000;
 				if(Enemy.hearts[i].active <= 0){
-					console.log("Go Haway!")
 					Enemy.hearts[i].visible = false;
 				}
 			}
@@ -69,7 +70,6 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 	}
 
 	Enemy.spawnHeart = function(pos){
-		console.log("♥", pos.x, pos.y);
 		var heart = Enemy.hearts.shift();
 
 		heart.position.x = pos.x;
@@ -94,7 +94,16 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 	Enemy.prototype.free = function(){
 		if(!this.wasFree){
 			this.wasFree = true;
-			Enemy.spawnHeart(this.getPosition());
+			var closest = {};
+			var d = Infinity;
+			for (var i = 0; i < vanishingPoints.length; i++) {
+				var d2 = this.getPosition().sub(vanishingPoints[i]).lengthSq();
+				if(d2 < d){
+					closest = vanishingPoints[i];
+					d = d2;
+				}
+			};
+			this.vanishingPoint = new Vector2D(closest.x,closest.y);
 		}
 	};
 
@@ -155,11 +164,21 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 
 				this.sprite.setJumpHeight(1 -  d*d);
 			}
-		} else if (!this.dead && this.game) {
-			var dir = game.getRoundedPlayerPosition();
-			dir.sub(this.getPosition());
+		} else if(!this.dead){
+			var dir = new Vector2D(200,200);
+			if (this.wasFree){
+				dir = this.vanishingPoint.copy().sub(this.getPosition());
+			} else if (this.game) {
+				dir = this.game.getRoundedPlayerPosition();
+				dir.sub(this.getPosition());
+			}
 
 			if (dir.lengthSq() <= 225) {
+				if(this.wasFree && dir.lengthSq() === 0){
+					this.dead = true;
+					this.sprite.character.visible = false;
+					this.sprite.shadow.visible = false;
+				}
 				var d1, d2;
 				if (Math.abs(dir.x) > Math.abs(dir.y)) {
 					d1 = new Vector2D(signum(dir.x), 0);
@@ -173,7 +192,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 				t1.add(this.getPosition());
 				t2.add(this.getPosition());
 
-				if (d1.lengthSq() > 0 && !game.level.collides(t1)) {
+				if (this.wasFree || (d1.lengthSq() > 0 && !game.level.collides(t1))) {
 					this.jump(d1);
 					Communicator.instance.send({type: "jump", val:{id: this.id, vec : this.target}});
 				} else if (d2.lengthSq() > 0 && !game.level.collides(t2)) {
@@ -191,8 +210,10 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 			this.target.add(direction);
 			this.jumpingDirection = direction;
 
-
 			this.animTime = jumpTime;
+			if(this.wasFree){
+				Enemy.spawnHeart(this.getPosition());
+			}
 		}
 	};
 

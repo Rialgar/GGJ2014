@@ -55,6 +55,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 			if (this.animTime < 0) {
 				this.sprite.setPosition(this.target);
 				this.sprite.setJumpHeight(0);
+				this.sprite.character.position.z = 3;
 				delete this.target;
 
 				//TODO: emit landing event here
@@ -68,6 +69,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 
 				tg.add(fr);
 				this.sprite.setPosition(tg);
+				this.sprite.character.position.z = 5;
 
 				var d = (this.animTime - jumpTime/2) / (jumpTime/2);
 

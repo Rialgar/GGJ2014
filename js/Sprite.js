@@ -43,6 +43,7 @@ define(["Vector2D"], function(Vector2D) {
 			new THREE.PlaneGeometry(0.8, 0.75),
 			new THREE.MeshBasicMaterial({color: 0xffffff, map: THREE.ImageUtils.loadTexture("./maps/shadow.png"), transparent: true})
 		);
+		this.shadow.position.z = 2;
 		this.mesh.add(this.shadow)
 
 		if(this.animations["idle"]){

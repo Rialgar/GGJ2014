@@ -25,9 +25,10 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 		game.renderer.setSize(window.innerWidth, window.innerWidth / game.ratio);
 
 		function onWindowResize() {
-			game.renderer.setSize(window.innerWidth, window.innerHeight);
+			game.renderer.setSize(window.innerWidth, window.innerWidth / game.ratio);
 		}
 
+		window.addEventListener("resize", onWindowResize);
 
 		game.scene.add(Player.instance.sprite.mesh);
 

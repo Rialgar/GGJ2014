@@ -32,8 +32,8 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 			that.applyExternalMovement(data.vec);
 			this.sprite.setPosition(this.position);
 		});
-		Communicator.instance.register(this, "attack", function(dir) {
-			this.doAttack(dir);
+		Communicator.instance.register(this, "attack", function(data) {
+			this.doAttack(data.vec, data.target);
 		});
 		Communicator.instance.register(this, "damage", function(data) {
 			this.LP = data+1;
@@ -83,7 +83,7 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		
 	};
 
-	Player.prototype.doAttack = function(dir) {
+	Player.prototype.doAttack = function(dir, id) {
 		this.sprite.setAnimation(dir);
 		switch(dir){
 			case "up": dir = new Vector2D(0,-1); break;
@@ -91,8 +91,8 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 			case "left": dir = new Vector2D(-1,0); break;
 			case "right": dir = new Vector2D(1,0); break;
 		}
-		this.game.critterHit(this.position, dir);
-	}
+		return this.game.critterHit(this.position, dir, id);
+	};
 
 	Player.prototype.attack = function() {
 		var moving = this.movingVector.copy().add(this.externalMovingVector);
@@ -111,11 +111,15 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		} else {
 			dir = "up";
 		}
+		var critter = this.doAttack(dir);
 		Communicator.instance.send({
 			type: "attack",
-			val: dir
+			val: {
+				vec: dir,
+				target: critter ? critter.id : null
+			}
 		});
-		this.doAttack(dir);
+		
 	}
 
 	Player.prototype.die = function() {

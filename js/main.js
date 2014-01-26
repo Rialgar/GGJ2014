@@ -58,15 +58,22 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 			return false;
 		};
 
-		game.critterHit = function(pos, dir) {
-			for (var i = 0; i < game.critters.length; i++) {
-				var d = game.critters[i].getPosition().sub(dir.multiplied(0.5/dir.length()).add(pos));
-				if(d.lengthSq() <= 2){
-					//console.log(d.x*pos.x + d.y*pos.y);
-					//if(d.x*dir.x + d.y*dir.y > 0) {
+		game.critterHit = function(pos, dir, id) {
+			if(id) {
+				for (var i = 0; i < game.critters.length; i++) {
+					var c = game.critters[i];
+					if(c.id === id || c.otherID === id){
 						game.critters[i].damage(dir);
-						return;
-					//}
+						return game.critters[i];
+					}
+				}
+			} else {
+				for (var i = 0; i < game.critters.length; i++) {
+					var d = game.critters[i].getPosition().sub(dir.multiplied(0.5/dir.length()).add(pos));
+					if(d.lengthSq() <= 2){
+						game.critters[i].damage(dir);
+						return game.critters[i];
+					}
 				}
 			}
 		}

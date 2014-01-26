@@ -23,7 +23,6 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 			canvas : game.canvas
 		});
 		game.renderer.setSize(window.innerWidth, window.innerWidth / game.ratio);
-
 		function onWindowResize() {
 			game.renderer.setSize(window.innerWidth, window.innerWidth / game.ratio);
 		}
@@ -108,6 +107,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 		document.body.appendChild(stats.domElement);
 
 		game.draw = function() {
+			console.log("in draw");
 			this.camera.position.x = Math.round(Player.instance.position.x * this.level.tileWidth) / this.level.tileWidth;
 			this.camera.position.y = -Math.round(Player.instance.position.y * this.level.tileHeight) / this.level.tileHeight;
 			this.renderer.render(this.scene, this.camera, this.buffer);
@@ -200,7 +200,8 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 			});
 		};
 		game.startGame = function() {
-			document.getElementById("notification").textContent = "";
+			//document.getElementById("notification").textContent = "";
+			document.getElementById("welcome").style.opacity = "0";
 			animate();
 			window.setInterval(function() {
 				now = new Date().valueOf();

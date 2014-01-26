@@ -169,6 +169,7 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 				this.die();
 				return;
 			}
+			this.sprite.setAnimation("hit");
 			var that = this;
 			window.setTimeout(function() {
 				that.invincible = false;

@@ -47,7 +47,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 			if(this.LP < 0){
 				this.die();
 			}
-			this.pushDir = dir.copy().normalize().scale(4);
+			this.pushDir = dir.copy().normalize().scale(15);
 			this.pushTime = 500;
 		};
 
@@ -57,6 +57,8 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 			this.pushTime -= d;
 
 			var pushVector = this.pushDir.multiplied(d/1000);
+
+			this.pushDir.scale(9.5/d);
 
 			this.setPosition(this.getPosition().add(pushVector));
 			if(this.target){

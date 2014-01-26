@@ -83,7 +83,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 			}
 		}
 
-		Enemy.hearts.forEach(function(ea){
+		Enemy.icons.forEach(function(ea){
 			game.scene.add(ea);
 		});
 
@@ -157,8 +157,9 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 					if (critters[i].type === "P0" && game.pID === 0) {
 						game.level.mesh.add(critters[i].sprite.mesh);
 						if (otherCritter) {
-							critters.splice(critters.indexOf(otherCritter), 1);
+							critters[i].otherID = otherCritter.id;
 							critters[i].good &= otherCritter.good;
+							critters.splice(critters.indexOf(otherCritter), 1);
 							delete otherCritter;
 							i--;
 							continue;
@@ -212,7 +213,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 				for (var i = 0; i < game.critters.length; i++) {
 					game.critters[i].update(delta);
 				};
-				Enemy.updateHearts(delta);
+				Enemy.updateIcons(delta);
 			}, 10);
 		};
 		Communicator.instance.game = game;

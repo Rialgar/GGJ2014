@@ -14,15 +14,15 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		return false;
 	}
 
+	var deadMaterial = new THREE.MeshBasicMaterial({color: 0xffffff, map: THREE.ImageUtils.loadTexture("./maps/skelett.png"), transparent: true});
+
 	var vanishingPoints = [{x:31, y:204}];
 
 	var jumpTime = 800;
 
-	var Enemy = function(geom, material, deadMaterial, width, height, type, gid){
+	var Enemy = function(geom, material, width, height, type, gid){
 		Emitter.call(this);
 		this.sprite = new Sprite(geom, material, width, height);
-		this.deadMaterial = deadMaterial;
-		this.deadMaterial.transparent = true;
 		this.type = type;
 		this.gid = gid;
 		this.good = isGood(gid);
@@ -47,37 +47,49 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		});
 	};
 
-	var heartgeometry = new THREE.PlaneGeometry(48/80,48/80);
-	var heartmaterial = new THREE.MeshBasicMaterial({color:0xffffff, map:THREE.ImageUtils.loadTexture("./maps/hearticon.png")});
-	Enemy.hearts = [];
+	var icongeometry = new THREE.PlaneGeometry(48/80,48/80);
+	var iconMaterials = {
+		heart: new THREE.MeshBasicMaterial({color:0xffffff, map:THREE.ImageUtils.loadTexture("./maps/hearticon.png")}),
+		frownmie: new THREE.MeshBasicMaterial({color:0xffffff, map:THREE.ImageUtils.loadTexture("./maps/frownieicon.png")})
+	};
+	Enemy.icons = [];
 	for (var i = 0; i < 20; i++) {
-		Enemy.hearts.push(new THREE.Mesh(heartgeometry, heartmaterial));
-		Enemy.hearts[i].position.z = 9;
-		Enemy.hearts[i].active = -1;
-		Enemy.hearts[i].visible = false;
+		Enemy.icons.push(new THREE.Mesh(icongeometry, iconMaterials["heart"]));
+		Enemy.icons[i].position.z = 9;
+		Enemy.icons[i].active = -1;
+		Enemy.icons[i].visible = false;
 	}
 
-	Enemy.updateHearts = function(delta){
+	Enemy.updateIcons = function(delta){
 		for (var i = 0; i < 20; i++) {
-			if(Enemy.hearts[i].active >= 0) {
-				Enemy.hearts[i].active -= delta;
-				Enemy.hearts[i].position.y += delta/1000;
-				if(Enemy.hearts[i].active <= 0){
-					Enemy.hearts[i].visible = false;
+			if(Enemy.icons[i].active >= 0) {
+				Enemy.icons[i].active -= delta;
+				Enemy.icons[i].position.y += delta/1000;
+				if(Enemy.icons[i].active <= 0){
+					Enemy.icons[i].visible = false;
 				}
 			}
 		}		
 	}
 
+	Enemy.spawnIcon = function(pos, type){
+		var icon = Enemy.icons.shift();
+
+		icon.position.x = pos.x;
+		icon.position.y = -pos.y;
+		icon.material = iconMaterials[type];
+		icon.visible = true;
+		icon.active = 2000;
+
+		Enemy.icons.push(icon);
+	}
+
 	Enemy.spawnHeart = function(pos){
-		var heart = Enemy.hearts.shift();
+		Enemy.spawnIcon(pos, "heart");
+	}
 
-		heart.position.x = pos.x;
-		heart.position.y = -pos.y;
-		heart.visible = true;
-		heart.active = 2000;
-
-		Enemy.hearts.push(heart);
+	Enemy.spawnFrownie = function(pos){
+		Enemy.spawnIcon(pos, "frownie");
 	}
 
 	Enemy.prototype = Object.create(Emitter.prototype);
@@ -108,7 +120,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 	};
 
 	Enemy.prototype.die = function(){
-		this.sprite.character.material = this.deadMaterial;
+		this.sprite.character.material = deadMaterial;
 		this.dead = true;
 	};
 

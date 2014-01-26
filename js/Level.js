@@ -55,7 +55,6 @@ define(["Vector2D", "Sprite", "Enemy"], function (Vector2D, Sprite, Enemy) {
 						tileset.texture.magFilter = THREE.NearestFilter;
 						tileset.texture.minFilter = THREE.NearestFilter;
 						tileset.material = new THREE.MeshBasicMaterial( { color: 0xffffff, map: tileset.texture  } );
-						tileset.deadMaterial = new THREE.MeshBasicMaterial( { color: 0xaaaaaa, map: tileset.texture  } );
 
 						tileset.geometries = [];
 						for (var x = 0; x < tileset.width; x++) {
@@ -167,7 +166,7 @@ define(["Vector2D", "Sprite", "Enemy"], function (Vector2D, Sprite, Enemy) {
 						//TODO: do something with objects.
 						var type = object.parentNode.getAttribute("name");
 						var tileset = getTileset(gid);
-						var enemy = new Enemy(getGeometry(gid), tileset.material, tileset.deadMaterial, tileset.tileWidth, tileset.tileHeight, type, gid);
+						var enemy = new Enemy(getGeometry(gid), tileset.material, tileset.tileWidth, tileset.tileHeight, type, gid);
 						enemy.id = i+1;
 						enemy.setPosition(new Vector2D(Math.round(x/that.tileWidth), Math.round(y/that.tileHeight)-1));
 

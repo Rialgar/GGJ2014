@@ -12,7 +12,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		this.deadMaterial.transparent = true;
 		this.type = type;
 		this.jumpingDirection = null;
-		this.LP = LP || 0;
+		this.LP = LP || 1;
 		this.id = 0;
 		this.game = null;
 		this.otherID = null;
@@ -47,9 +47,26 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 			if(this.LP < 0){
 				this.die();
 			}
+			this.pushDir = dir.copy().normalize().scale(4);
+			this.pushTime = 500;
 		};
 
 	Enemy.prototype.update = function(delta) {
+		if(this.pushDir){
+			var d = Math.min(delta, this.pushTime);
+			this.pushTime -= d;
+
+			var pushVector = this.pushDir.multiplied(d/1000);
+
+			this.setPosition(this.getPosition().add(pushVector));
+			if(this.target){
+				this.target.add(pushVector);
+			}
+
+			if(this.pushTime <= 0){
+				this.pushDir = false;
+			}
+		}
 		if (this.target) {
 			this.animTime -= delta;
 			if (this.animTime < 0) {

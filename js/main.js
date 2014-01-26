@@ -107,7 +107,6 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 		document.body.appendChild(stats.domElement);
 
 		game.draw = function() {
-			console.log("in draw");
 			this.camera.position.x = Math.round(Player.instance.position.x * this.level.tileWidth) / this.level.tileWidth;
 			this.camera.position.y = -Math.round(Player.instance.position.y * this.level.tileHeight) / this.level.tileHeight;
 			this.renderer.render(this.scene, this.camera, this.buffer);

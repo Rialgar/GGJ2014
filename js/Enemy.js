@@ -130,8 +130,10 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		setMeshToDead(this.sprite.character, this.good);
 		if(this.good){
 			Enemy.spawnFrownie(this.getPosition());
+			this.emit("slaughtered");
 		}
 		this.dead = true;
+		this.emit("die");
 	};
 
 
@@ -170,7 +172,6 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 				this.sprite.character.position.z = 3;
 				delete this.target;
 
-				//TODO: emit landing event here
 				this.emit("land", {pos: this.target, vec: this.jumpingDirection});
 			} else {
 				var fr = this.from.copy();
@@ -201,6 +202,8 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 					this.dead = true;
 					this.sprite.character.visible = false;
 					this.sprite.shadow.visible = false;
+					this.target = false;
+					this.emit("die");
 				}
 				var d1, d2;
 				if (Math.abs(dir.x) > Math.abs(dir.y)) {

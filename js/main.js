@@ -82,16 +82,17 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 			}
 		}
 		
-		this.screenShaking = 0;
+		game.slaughteredInnocents = 0;
+		
+		game.screenShaking = 0;
 		game.shakeScreen = function(amount) {
-			this.screenShaking = amount;
-			var that = this;
+			game.screenShaking = amount;
 			new TWEEN.Tween({
 				val : amount,
 			}).to({
 				val : 0
 			}, 800).easing(TWEEN.Easing.Quadratic.Out).onUpdate(function() {
-				that.screenShaking = this.val;
+				game.screenShaking = this.val;
 			}).start();
 		};
 
@@ -228,6 +229,22 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 						}
 					});
 				}
+				
+				// count the critters and setup the win screen condition
+				game.remainingCritters = critters.length;
+				for(var i = 0; i < critters.length; i++) {
+					critters[i].register(this, "die", function() {
+						game.remainingCritters--;
+						console.log("remaining critters:", game.remainingCritters);
+						if(game.remainingCritters <= 0) {
+							game.win();
+						}
+						
+					});
+					critters[i].register(this, "slaughtered", function() {
+						game.slaughtered();
+					});
+				}
 
 				game.camera = new THREE.OrthographicCamera(-w / 2 / game.level.tileWidth, w / 2 / game.level.tileWidth, h / 2 / game.level.tileHeight, -h / 2 / game.level.tileHeight, -500, 1000);
 				game.scene.add(game.level.mesh);
@@ -235,6 +252,24 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 				Communicator.instance.sendReady();
 			});
 		};
+		
+		game.slaughtered = function() {
+			game.slaughteredInnocents++;
+			console.log("you slaughtered one innocent. Innocent Death Count:", game.slaughteredInnocents);
+		};
+		
+		game.win = function() {
+			document.getElementById("notification").textContent = "You won and killed " + game.slaughteredInnocents + " innocent little fishies.";
+			var el = document.getElementById("welcome");
+			new TWEEN.Tween({
+				val : 0,
+			}).to({
+				val : 1
+			}, 500).easing(TWEEN.Easing.Quadratic.Out).onUpdate(function() {
+				el.style.opacity = this.val;
+			}).start();
+		};
+		
 		game.startGame = function() {
 			//document.getElementById("notification").textContent = "";
 			document.getElementById("welcome").style.opacity = "0";

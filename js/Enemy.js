@@ -16,7 +16,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 
 	var deadMaterials = [
 		new THREE.MeshBasicMaterial({color: 0xffffff, map: THREE.ImageUtils.loadTexture("./maps/skelett.png"), transparent: true}),
-		new THREE.MeshBasicMaterial({color: 0xffff00, map: THREE.ImageUtils.loadTexture("./maps/skelett.png"), transparent: true})
+		new THREE.MeshBasicMaterial({color: 0xffffff, map: THREE.ImageUtils.loadTexture("./maps/spross.png"), transparent: true})
 	];
 
 	var setMeshToDead = function(mesh, good){
@@ -48,7 +48,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		});
 		Communicator.instance.register(this, "free", function(id) {
 			if(id === that.id || id === that.otherID) {
-				// process the jump data
+				// process the free data
 				that.free();
 			}
 		});

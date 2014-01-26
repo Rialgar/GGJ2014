@@ -166,7 +166,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		}
 		if (this.target) {
 			this.animTime -= delta;
-			if (this.animTime < 0) {
+			if (this.animTime <= 0) {
 				this.sprite.setPosition(this.target);
 				this.sprite.setJumpHeight(0);
 				this.sprite.character.position.z = 3;

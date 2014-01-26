@@ -162,6 +162,7 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		if (!this.invincible) {
 			this.LP--;
 			this.refreshLifeDisplay();
+			this.game.shakeScreen(.5);
 			this.invincible = true;
 			if (this.LP < 0) {
 				this.die();

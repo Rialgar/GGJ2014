@@ -54,7 +54,6 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 								Communicator.instance.send({type: "free", val: critter.id});
 							}
 						}
-						
 						return true;
 					}
 				}
@@ -80,7 +79,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 					}
 				}
 			}
-		}
+		};
 		
 		game.slaughteredInnocents = 0;
 		
@@ -115,11 +114,6 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 
 		game.fullScreenCamera = new THREE.OrthographicCamera(-w / 2, w / 2, h / 2, -h / 2, -500, 1000);
 
-		var stats = new Stats();
-		stats.domElement.style.position = 'absolute';
-		stats.domElement.style.top = '0px';
-		document.body.appendChild(stats.domElement);
-
 		var ss = {
 			x : 0,
 			y : 0,
@@ -147,15 +141,9 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 			}
 
 		}
-		var stats = new Stats();
-		stats.domElement.style.position = 'absolute';
-		stats.domElement.style.top = '0px';
-		document.body.appendChild(stats.domElement);
-
 		var lastTime = null;
 		var animate = function(timeStamp) {
 			window.requestAnimationFrame(animate);
-			stats.update();
 			TWEEN.update();
 
 			game.draw();
@@ -216,18 +204,14 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 							if(game.level.collides(Player.instance.position.copy().add(data.vec))) {
 								data.vec.scale(-1);
 							}
-							new TWEEN.Tween({
-								x : Player.instance.position.x,
-								y : Player.instance.position.y
-							}).to({
-								x : Player.instance.position.x + data.vec.x,
-								y : Player.instance.position.y + data.vec.y
-							}, 500).easing(TWEEN.Easing.Cubic.Out).onUpdate(function() {
-								Player.instance.position.x = this.x;
-								Player.instance.position.y = this.y;
-							}).start();
+							
+							if(game.pID === 0) {
+								Communicator.instance.send({type: "push", val: data.vec});
+								Player.instance.push(data.vec);
+							}
 						}
 					});
+					
 				}
 				
 				// count the critters and setup the win screen condition

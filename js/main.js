@@ -80,7 +80,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 					}
 				}
 			}
-		}
+		};
 		
 		game.slaughteredInnocents = 0;
 		
@@ -115,11 +115,6 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 
 		game.fullScreenCamera = new THREE.OrthographicCamera(-w / 2, w / 2, h / 2, -h / 2, -500, 1000);
 
-		var stats = new Stats();
-		stats.domElement.style.position = 'absolute';
-		stats.domElement.style.top = '0px';
-		document.body.appendChild(stats.domElement);
-
 		var ss = {
 			x : 0,
 			y : 0,
@@ -147,15 +142,9 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 			}
 
 		}
-		var stats = new Stats();
-		stats.domElement.style.position = 'absolute';
-		stats.domElement.style.top = '0px';
-		document.body.appendChild(stats.domElement);
-
 		var lastTime = null;
 		var animate = function(timeStamp) {
 			window.requestAnimationFrame(animate);
-			stats.update();
 			TWEEN.update();
 
 			game.draw();

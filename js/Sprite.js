@@ -40,7 +40,7 @@ define(["Vector2D"], function(Vector2D) {
 			this.mesh.add(this.character);
 		}
 		this.shadow = new THREE.Mesh(
-			new THREE.PlaneGeometry(0.8, 0.75),
+			new THREE.PlaneGeometry(88/80, 88/80),
 			new THREE.MeshBasicMaterial({color: 0xffffff, map: THREE.ImageUtils.loadTexture("./maps/shadow.png"), transparent: true})
 		);
 		this.shadow.position.z = 2;

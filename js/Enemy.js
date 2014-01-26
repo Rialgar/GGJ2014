@@ -24,7 +24,6 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		this.type = type;
 		this.gid = gid;
 		this.good = isGood(gid);
-		console.log(gid, this.good);
 		this.jumpingDirection = null;
 		this.LP = this.good ? 0 : 1;
 		this.id = 0;
@@ -41,6 +40,41 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		
 	};
 
+	var heartgeometry = new THREE.PlaneGeometry(48/80,48/80);
+	var heartmaterial = new THREE.MeshBasicMaterial({color:0xffffff, map:THREE.ImageUtils.loadTexture("./maps/hearticon.png")});
+	Enemy.hearts = [];
+	for (var i = 0; i < 20; i++) {
+		Enemy.hearts.push(new THREE.Mesh(heartgeometry, heartmaterial));
+		Enemy.hearts[i].position.z = 9;
+		Enemy.hearts[i].active = -1;
+		Enemy.hearts[i].visible = false;
+	}
+
+	Enemy.updateHearts = function(delta){
+		for (var i = 0; i < 20; i++) {
+			if(Enemy.hearts[i].active >= 0) {
+				Enemy.hearts[i].active -= delta;
+				Enemy.hearts[i].position.y += delta/1000;
+				if(Enemy.hearts[i].active <= 0){
+					console.log("Go Haway!")
+					Enemy.hearts[i].visible = false;
+				}
+			}
+		}		
+	}
+
+	Enemy.spawnHeart = function(pos){
+		console.log("♥", pos.x, pos.y);
+		var heart = Enemy.hearts.shift();
+
+		heart.position.x = pos.x;
+		heart.position.y = -pos.y;
+		heart.visible = true;
+		heart.active = 2000;
+
+		Enemy.hearts.push(heart);
+	}
+
 	Enemy.prototype = Object.create(Emitter.prototype);
 	Enemy.prototype.constructor = Enemy;
 
@@ -53,7 +87,10 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 	};
 
 	Enemy.prototype.free = function(){
-
+		if(!this.wasFree){
+			this.wasFree = true;
+			Enemy.spawnHeart(this.getPosition());
+		}
 	};
 
 	Enemy.prototype.die = function(){

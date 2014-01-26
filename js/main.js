@@ -1,4 +1,4 @@
-require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(domReady, Communicator, Level, Player, Vector2D) {
+require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], function(domReady, Communicator, Level, Player, Vector2D, Enemy) {
 	domReady(function() {
 
 		var game = {};
@@ -82,6 +82,10 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 				}
 			}
 		}
+
+		Enemy.hearts.forEach(function(ea){
+			game.scene.add(ea);
+		});
 
 		game.buffer = new THREE.WebGLRenderTarget(w, h,{
 			minFilter: THREE.LinearFilter
@@ -206,6 +210,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 				for (var i = 0; i < game.critters.length; i++) {
 					game.critters[i].update(delta);
 				};
+				Enemy.updateHearts(delta);
 			}, 10);
 		};
 		Communicator.instance.game = game;

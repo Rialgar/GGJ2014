@@ -3,16 +3,30 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		return x > 0 ? 1 : x < 0 ? -1 : 0;
 	}
 
+	var relations = [[146, 147],[148, 149]]; //[good, bad]
+
+	var isGood = function(id){
+		for (var i = 0; i < relations.length; i++) {
+			if(relations[i][0] === id){
+				return true;
+			}
+		};
+		return false;
+	}
+
 	var jumpTime = 800;
 
-	var Enemy = function(geom, material, deadMaterial, width, height, type, LP){
+	var Enemy = function(geom, material, deadMaterial, width, height, type, gid){
 		Emitter.call(this);
 		this.sprite = new Sprite(geom, material, width, height);
 		this.deadMaterial = deadMaterial;
 		this.deadMaterial.transparent = true;
 		this.type = type;
+		this.gid = gid;
+		this.good = isGood(gid);
+		console.log(gid, this.good);
 		this.jumpingDirection = null;
-		this.LP = LP || 1;
+		this.LP = this.good ? 0 : 1;
 		this.id = 0;
 		this.game = null;
 		this.otherID = null;
@@ -37,19 +51,24 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 	Enemy.prototype.setPosition = function(pos) {
 		this.sprite.setPosition(pos);
 	};
+
+	Enemy.prototype.free = function(){
+
+	};
+
 	Enemy.prototype.die = function(){
-			this.sprite.character.material = this.deadMaterial;
-			this.dead = true;
-		};
+		this.sprite.character.material = this.deadMaterial;
+		this.dead = true;
+	};
 
 	Enemy.prototype.damage = function(dir){
-			this.LP--;
-			if(this.LP < 0){
-				this.die();
-			}
-			this.pushDir = dir.copy().normalize().scale(15);
-			this.pushTime = 500;
-		};
+		this.LP--;
+		if(this.LP < 0){
+			this.die();
+		}
+		this.pushDir = dir.copy().normalize().scale(15);
+		this.pushTime = 500;
+	};
 
 	Enemy.prototype.update = function(delta) {
 		if(this.pushDir){

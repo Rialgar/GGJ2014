@@ -47,8 +47,13 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 				if (critter && !critter.dead) {
 					if (critter.getPosition().x === rx && critter.getPosition().y === ry) {
 						if(game.pID === 0) {
-							Player.instance.damage(1);
-							Communicator.instance.send({type: "damage", val: Player.instance.LP});
+							if(!critter.good){
+								Player.instance.damage(1);
+								Communicator.instance.send({type: "damage", val: Player.instance.LP});
+							} else {
+								critter.free();
+								Communicator.instance.send({type: "free", val: critter.id});
+							}
 						}
 						
 						return true;
@@ -70,7 +75,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D"], function(do
 			} else {
 				for (var i = 0; i < game.critters.length; i++) {
 					var d = game.critters[i].getPosition().sub(dir.multiplied(0.5/dir.length()).add(pos));
-					if(d.lengthSq() <= 2){
+					if(!game.critters[i].dead && d.lengthSq() <= 2){
 						game.critters[i].damage(dir);
 						return game.critters[i];
 					}

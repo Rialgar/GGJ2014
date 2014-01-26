@@ -160,8 +160,8 @@ define(["Vector2D", "Sprite", "Enemy"], function (Vector2D, Sprite, Enemy) {
 					var objects = map.getElementsByTagName("object");
 					for (var i = 0; i < objects.length; i++) {
 						var object = objects[i];
-						var x = parseInt(object.getAttribute("x"));
-						var y = parseInt(object.getAttribute("y"));
+						var x = parseInt(object.getAttribute("x")) + 22;
+						var y = parseInt(object.getAttribute("y")) - 22;
 						var gid = parseInt(object.getAttribute("gid"));
 						//TODO: do something with objects.
 						var type = object.parentNode.getAttribute("name");

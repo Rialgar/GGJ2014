@@ -146,11 +146,13 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 	}
 
 	Player.prototype.die = function() {
-		var el = document.getElementById("canvas");
+		//var el = document.getElementById("canvas");
+		document.getElementById("notification").textContent = "Squashed by mutant fish!";
+		var el = document.getElementById("welcome");
 		new TWEEN.Tween({
-			val : 1,
+			val : 0,
 		}).to({
-			val : .0
+			val : 1
 		}, 500).easing(TWEEN.Easing.Quadratic.Out).onUpdate(function() {
 			el.style.opacity = this.val;
 		}).start();

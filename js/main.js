@@ -23,7 +23,6 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 			canvas : game.canvas
 		});
 		game.renderer.setSize(window.innerWidth, window.innerWidth / game.ratio);
-
 		function onWindowResize() {
 			game.renderer.setSize(window.innerWidth, window.innerWidth / game.ratio);
 		}
@@ -203,7 +202,8 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 			});
 		};
 		game.startGame = function() {
-			document.getElementById("notification").textContent = "";
+			//document.getElementById("notification").textContent = "";
+			document.getElementById("welcome").style.opacity = "0";
 			animate();
 			window.setInterval(function() {
 				now = new Date().valueOf();

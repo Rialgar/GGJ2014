@@ -14,7 +14,14 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 		return false;
 	}
 
-	var deadMaterial = new THREE.MeshBasicMaterial({color: 0xffffff, map: THREE.ImageUtils.loadTexture("./maps/skelett.png"), transparent: true});
+	var deadMaterials = [
+		new THREE.MeshBasicMaterial({color: 0xffffff, map: THREE.ImageUtils.loadTexture("./maps/skelett.png"), transparent: true}),
+		new THREE.MeshBasicMaterial({color: 0xffff00, map: THREE.ImageUtils.loadTexture("./maps/skelett.png"), transparent: true})
+	];
+
+	var setMeshToDead = function(mesh, good){
+		mesh.material = deadMaterials[good ? 0 : 1];
+	}
 
 	var vanishingPoints = [{x:31, y:204}];
 
@@ -120,7 +127,7 @@ define(["Sprite", "Vector2D", "Emitter", "Communicator"], function(Sprite, Vecto
 	};
 
 	Enemy.prototype.die = function(){
-		this.sprite.character.material = deadMaterial;
+		setMeshToDead(this.sprite.character, this.good);
 		if(this.good){
 			Enemy.spawnFrownie(this.getPosition());
 		}

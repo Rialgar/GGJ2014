@@ -242,6 +242,12 @@ define(["Keyboard", "Vector2D", "Sprite", "Communicator", "Gamepad"], function(K
 		this.arrow.rotation.z = moving.angle() + Math.PI / 2;
 
 		this.sprite.update(delta);
+
+		var pos = this.game.getRoundedPlayerPosition();
+
+		if(pos.x >= 24 && pos.x <= 30 && pos.y == 52){
+			this.game.win();
+		}
 	};
 
 	Player.prototype.moveColliding = function(movement) {

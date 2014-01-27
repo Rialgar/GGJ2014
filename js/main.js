@@ -221,7 +221,7 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 						game.remainingCritters--;
 						console.log("remaining critters:", game.remainingCritters);
 						if(game.remainingCritters <= 0) {
-							game.win();
+							//game.win();
 						}
 						
 					});
@@ -243,15 +243,18 @@ require(["domReady", "Communicator", "Level", "Player", "Vector2D", "Enemy"], fu
 		};
 		
 		game.win = function() {
-			document.getElementById("notification").textContent = "You won and killed " + game.slaughteredInnocents + " innocent little fishies.";
-			var el = document.getElementById("welcome");
-			new TWEEN.Tween({
-				val : 0,
-			}).to({
-				val : 1
-			}, 500).easing(TWEEN.Easing.Quadratic.Out).onUpdate(function() {
-				el.style.opacity = this.val;
-			}).start();
+			if(!this.won){
+				this.won = true
+				document.getElementById("notification").textContent = "You won and killed " + game.slaughteredInnocents + " innocent little fishies.";
+				var el = document.getElementById("welcome");
+				new TWEEN.Tween({
+					val : 0,
+				}).to({
+					val : 1
+				}, 500).easing(TWEEN.Easing.Quadratic.Out).onUpdate(function() {
+					el.style.opacity = this.val;
+				}).start();
+			}
 		};
 		
 		game.startGame = function() {
